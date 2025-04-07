@@ -1,4 +1,4 @@
-import { LngLatLocationType } from '@/types/general';
+import { LngLatLocationType } from "@/types/general";
 
 export interface WeatherAlert {
   status: string;
@@ -35,9 +35,9 @@ export type WeatherAlertContent = {
   // 位置，如"福建省三明市"
   location: string;
   request_status: string;
-}
+};
 
 export type ADCodeType = {
   adcode: number;
   name: string;
-}
+};

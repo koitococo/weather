@@ -1,5 +1,5 @@
-import { SkyConType } from '@/types/skycon';
-import { AQIType, WindType } from '@/types/general';
+import { SkyConType } from "@/types/skycon";
+import { AQIType, WindType } from "@/types/general";
 
 export interface DailyData {
   status: string;
@@ -38,13 +38,13 @@ export type DailyGeneralType<T = number> = {
   max: T;
   min: T;
   avg: T;
-}
+};
 
 export type DailyAstroType = {
   date: string;
   sunrise: { time: string };
   sunset: { time: string };
-}
+};
 
 export type DailyPrecipitationType = {
   date: string;
@@ -52,12 +52,12 @@ export type DailyPrecipitationType = {
   min: number;
   avg: number;
   probability: number;
-}
+};
 
 export type DailySkyConType = {
   data: string;
   value: SkyConType;
-}
+};
 
 export type DailyLifeIndexType = {
   ultraviolet: DailyGeneralLifeIndexType[];
@@ -65,10 +65,10 @@ export type DailyLifeIndexType = {
   dressing: DailyGeneralLifeIndexType[];
   comfort: DailyGeneralLifeIndexType[];
   coldRisk: DailyGeneralLifeIndexType[];
-}
+};
 
 export type DailyGeneralLifeIndexType = {
   date: string;
   index: string;
   desc: string;
-}
+};

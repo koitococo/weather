@@ -1,12 +1,12 @@
-import { DailyData } from '@/types/daily';
-import DataCard, { DataCardProps } from '@/components/DataCard';
-import { CalendarEvent } from 'tabler-icons-react';
-import { getSkyConText, SkyConType } from '@/types/skycon';
-import { useMemo } from 'react';
-import { Table } from '@mantine/core';
-import WeatherIcon from '@/components/WeatherIcon';
-import AQIBadge from '@/components/AQIBadge';
-import { useElementSize } from '@mantine/hooks';
+import { DailyData } from "@/types/daily";
+import DataCard, { DataCardProps } from "@/components/DataCard";
+import { CalendarEvent } from "tabler-icons-react";
+import { getSkyConText, SkyConType } from "@/types/skycon";
+import { useMemo } from "react";
+import { Table } from "@mantine/core";
+import WeatherIcon from "@/components/WeatherIcon";
+import AQIBadge from "@/components/AQIBadge";
+import { useElementSize } from "@mantine/hooks";
 
 export type DailyRowData = {
   date?: string;
@@ -19,7 +19,7 @@ export type DailyRowData = {
   AQI?: number;
 };
 
-export interface DailyCardProps extends Omit<DataCardProps, 'icon' | 'title'> {
+export interface DailyCardProps extends Omit<DataCardProps, "icon" | "title"> {
   data?: DailyData;
 }
 
@@ -27,68 +27,126 @@ export default function DailyCard({ data, ...props }: DailyCardProps) {
   const [rows, minT, maxT] = useMemo(() => {
     let minTemperature: number | undefined = Infinity;
     let maxTemperature: number | undefined = -Infinity;
-    return [Array.from({ length: data?.temperature.length ?? 10 }, (_, i): DailyRowData => {
-      minTemperature = data?.temperature[i].min && minTemperature
-        ? Math.min(minTemperature, data.temperature[i].min) : undefined;
-      maxTemperature = data?.temperature[i].max && maxTemperature
-        ? Math.max(maxTemperature, data.temperature[i].max) : undefined;
-      return {
-        date: data?.temperature[i].date,
-        skycon: data?.skycon[i].value,
-        precipitation: data?.precipitation[i].avg,
-        precipitationProbability: data?.precipitation[i].probability,
-        temperature: data?.temperature[i].avg,
-        temperatureMax: data?.temperature[i].max,
-        temperatureMin: data?.temperature[i].min,
-        AQI: data?.air_quality.aqi[i].avg.chn,
-      };
-    }), minTemperature, maxTemperature];
+    return [
+      Array.from(
+        { length: data?.temperature.length ?? 10 },
+        (_, i): DailyRowData => {
+          minTemperature =
+            data?.temperature[i].min && minTemperature
+              ? Math.min(minTemperature, data.temperature[i].min)
+              : undefined;
+          maxTemperature =
+            data?.temperature[i].max && maxTemperature
+              ? Math.max(maxTemperature, data.temperature[i].max)
+              : undefined;
+          return {
+            date: data?.temperature[i].date,
+            skycon: data?.skycon[i].value,
+            precipitation: data?.precipitation[i].avg,
+            precipitationProbability: data?.precipitation[i].probability,
+            temperature: data?.temperature[i].avg,
+            temperatureMax: data?.temperature[i].max,
+            temperatureMin: data?.temperature[i].min,
+            AQI: data?.air_quality.aqi[i].avg.chn,
+          };
+        },
+      ),
+      minTemperature,
+      maxTemperature,
+    ];
   }, [data]);
 
   const { ref, width } = useElementSize();
 
   return (
-    <DataCard ref={ref} {...props} icon={<CalendarEvent size={14} />} title={`10日预报`}>
-      <Table style={{ tableLayout: 'fixed' }}>
+    <DataCard
+      ref={ref}
+      {...props}
+      icon={<CalendarEvent size={14} />}
+      title={`10日预报`}
+    >
+      <Table style={{ tableLayout: "fixed" }}>
         <tbody>
-        {rows.map((row, index) => {
-          const date = row.date ? new Date(row.date) : new Date(Date.now() + 86400000 * index);
-          return (
-            <tr key={date.getTime()}>
-              <td style={{ border: 'none', width: width > 400 ? 80 : 40 }}>
-                {width > 400 ? `${date.toLocaleDateString('zh-CN', {
-                  month: '2-digit', day: '2-digit',
-                })} ` : null}
-                {date.toDateString() === new Date().toDateString()
-                  ? '今天'
-                  : date.toLocaleDateString('zh-CN', { weekday: 'short' })
-                }
-              </td>
-              {width > 320 ? (
-                <td style={{ border: 'none', textAlign: 'center', width: 80 }}>
-                  <AQIBadge aqi={row.AQI} showVal={row.AQI != undefined} short />
+          {rows.map((row, index) => {
+            const date = row.date
+              ? new Date(row.date)
+              : new Date(Date.now() + 86400000 * index);
+            return (
+              <tr key={date.getTime()}>
+                <td style={{ border: "none", width: width > 400 ? 80 : 40 }}>
+                  {width > 400
+                    ? `${date.toLocaleDateString("zh-CN", {
+                        month: "2-digit",
+                        day: "2-digit",
+                      })} `
+                    : null}
+                  {date.toDateString() === new Date().toDateString()
+                    ? "今天"
+                    : date.toLocaleDateString("zh-CN", { weekday: "short" })}
                 </td>
-              ) : null}
-              <td style={{ border: 'none', textAlign: width > 500 ? 'right' : 'center', width: width > 500 ? 64 : 32 }}>
-                {row.skycon ? <WeatherIcon className="w-5 h-5 inline-block" skycon={row.skycon} /> : null}
-              </td>
-              {width > 500 ? (
-                <td style={{ border: 'none', textAlign: 'left', opacity: 0.8, width: 64 }}>
-                  {row.skycon ? getSkyConText(row.skycon) : '--'}
+                {width > 320 ? (
+                  <td
+                    style={{ border: "none", textAlign: "center", width: 80 }}
+                  >
+                    <AQIBadge
+                      aqi={row.AQI}
+                      showVal={row.AQI != undefined}
+                      short
+                    />
+                  </td>
+                ) : null}
+                <td
+                  style={{
+                    border: "none",
+                    textAlign: width > 500 ? "right" : "center",
+                    width: width > 500 ? 64 : 32,
+                  }}
+                >
+                  {row.skycon ? (
+                    <WeatherIcon
+                      className="w-5 h-5 inline-block"
+                      skycon={row.skycon}
+                    />
+                  ) : null}
                 </td>
-              ) : null}
-              <td style={{ border: 'none', textAlign: 'right', opacity: 0.8, width: 40 }}>
-                {row.temperatureMin?.toFixed(0) ?? '--'}°
-              </td>
-              <td style={{ border: 'none', width: width > 450 ? 120 : '100%' }}>
-                <TemperatureIndicator min={row.temperatureMin} max={row.temperatureMax} lower={minT} upper={maxT} />
-              </td>
-              <td style={{ border: 'none', width: 40 }}>
-                {row.temperatureMax?.toFixed(0) ?? '--'}°
-              </td>
-            </tr>
-          );
-        })}
+                {width > 500 ? (
+                  <td
+                    style={{
+                      border: "none",
+                      textAlign: "left",
+                      opacity: 0.8,
+                      width: 64,
+                    }}
+                  >
+                    {row.skycon ? getSkyConText(row.skycon) : "--"}
+                  </td>
+                ) : null}
+                <td
+                  style={{
+                    border: "none",
+                    textAlign: "right",
+                    opacity: 0.8,
+                    width: 40,
+                  }}
+                >
+                  {row.temperatureMin?.toFixed(0) ?? "--"}°
+                </td>
+                <td
+                  style={{ border: "none", width: width > 450 ? 120 : "100%" }}
+                >
+                  <TemperatureIndicator
+                    min={row.temperatureMin}
+                    max={row.temperatureMax}
+                    lower={minT}
+                    upper={maxT}
+                  />
+                </td>
+                <td style={{ border: "none", width: 40 }}>
+                  {row.temperatureMax?.toFixed(0) ?? "--"}°
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </Table>
     </DataCard>
@@ -102,25 +160,34 @@ interface TemperatureIndicatorProps {
   upper?: number;
 }
 
-function TemperatureIndicator({ min, max, lower, upper }: TemperatureIndicatorProps) {
-  const isValid = min != undefined && max != undefined && lower != undefined && upper != undefined;
+function TemperatureIndicator({
+  min,
+  max,
+  lower,
+  upper,
+}: TemperatureIndicatorProps) {
+  const isValid =
+    min != undefined &&
+    max != undefined &&
+    lower != undefined &&
+    upper != undefined;
   const [left, right] = isValid ? calcBoundary(lower, upper) : [0, 1];
 
   const bgSize = 300 / (right - left);
-  const bgPos = (left + 1) / 3 * 100;
+  const bgPos = ((left + 1) / 3) * 100;
 
-  const mLeftPercent = isValid ? (min - lower) / (upper - lower) * 100 : 50;
-  const mRightPercent = isValid ? (upper - max) / (upper - lower) * 100 : 50;
+  const mLeftPercent = isValid ? ((min - lower) / (upper - lower)) * 100 : 50;
+  const mRightPercent = isValid ? ((upper - max) / (upper - lower)) * 100 : 50;
 
   return (
     <div className="relative temperature-indicator h-1 rounded-full overflow-hidden bg-semi-transparent-dark">
       <div
         className="transition-spacing duration-700"
         style={{
-          height: '100%',
+          height: "100%",
           marginLeft: `${mLeftPercent}%`,
           marginRight: `${mRightPercent}%`,
-          clipPath: 'inset(0 round 4px)',
+          clipPath: "inset(0 round 4px)",
         }}
       >
         <div
@@ -136,13 +203,17 @@ type CalcBoundaryConfig = {
   coldTemperature: number;
   hotTemperature: number;
   minGap: number;
-}
+};
 
-function calcBoundary(lower: number, upper: number, config: CalcBoundaryConfig = {
-  coldTemperature: -10,
-  hotTemperature: 40,
-  minGap: 0.2,
-}): [number, number] {
+function calcBoundary(
+  lower: number,
+  upper: number,
+  config: CalcBoundaryConfig = {
+    coldTemperature: -10,
+    hotTemperature: 40,
+    minGap: 0.2,
+  },
+): [number, number] {
   const { coldTemperature, hotTemperature, minGap } = config;
   let left = (lower - coldTemperature) / (hotTemperature - coldTemperature);
   let right = (upper - coldTemperature) / (hotTemperature - coldTemperature);

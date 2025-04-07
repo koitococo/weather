@@ -1,5 +1,5 @@
-import { getAQIText } from '@/components/AirQualityCard';
-import { SimpleBadge, SimpleBadgeProps } from '@/components/SimpleBadge';
+import { getAQIText } from "@/components/AirQualityCard";
+import { SimpleBadge, SimpleBadgeProps } from "@/components/SimpleBadge";
 
 export interface AQIBadgeProps extends SimpleBadgeProps {
   aqi?: number;
@@ -7,9 +7,16 @@ export interface AQIBadgeProps extends SimpleBadgeProps {
   short?: boolean;
 }
 
-export default function AQIBadge({ aqi, showVal, short, ...props }: AQIBadgeProps) {
+export default function AQIBadge({
+  aqi,
+  showVal,
+  short,
+  ...props
+}: AQIBadgeProps) {
   const text = short ? getAQIText(aqi).slice(0, 2) : getAQIText(aqi);
   return (
-    <SimpleBadge {...props}>{showVal ? aqi : null} {text}</SimpleBadge>
+    <SimpleBadge {...props}>
+      {showVal ? aqi : null} {text}
+    </SimpleBadge>
   );
 }

@@ -1,5 +1,5 @@
-import { SkyConType } from '@/types/skycon';
-import { AQIType, WindType } from '@/types/general';
+import { SkyConType } from "@/types/skycon";
+import { AQIType, WindType } from "@/types/general";
 
 export interface RealtimeData {
   status: string;
@@ -42,8 +42,8 @@ export type PrecipitationType = {
     distance: number;
     // 最近降水处的降水强度
     intensity: number;
-  }
-}
+  };
+};
 
 export type AirQualityType = {
   // PM2.5 浓度(μg/m3)
@@ -64,8 +64,8 @@ export type AirQualityType = {
   description: {
     chn: string;
     usa: string;
-  }
-}
+  };
+};
 
 export type LifeIndexType = {
   // 紫外线强度
@@ -81,5 +81,5 @@ export type LifeIndexType = {
     index: number;
     // 描述
     desc: string;
-  }
-}
+  };
+};

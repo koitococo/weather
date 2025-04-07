@@ -1,4 +1,9 @@
-function isCloserToStart(arg1: number, arg2: number, start: number, stop: number) {
+function isCloserToStart(
+  arg1: number,
+  arg2: number,
+  start: number,
+  stop: number,
+) {
   const isStartLessThanStop = start < stop;
   return arg1 < arg2 ? isStartLessThanStop : !isStartLessThanStop;
 }
@@ -7,7 +12,13 @@ function lerp(start: number, stop: number, amount: number) {
   return (1.0 - amount) * start + amount * stop;
 }
 
-function map(startOut: number, stopOut: number, amount: number, startIn: number, stopIn: number) {
+function map(
+  startOut: number,
+  stopOut: number,
+  amount: number,
+  startIn: number,
+  stopIn: number,
+) {
   if (isCloserToStart(amount, startIn, startIn, stopIn)) return startOut;
   if (isCloserToStart(stopIn, amount, startIn, stopIn)) return stopOut;
   const percentage = (amount - startIn) / (stopIn - startIn);
@@ -20,29 +31,36 @@ function map(startOut: number, stopOut: number, amount: number, startIn: number,
  * @param input 不知道咋叫
  * @param inIntervals 分段定义域，递增
  */
-function mapPiecewise(outIntervals: number[], input: number, inIntervals: number[]) {
+function mapPiecewise(
+  outIntervals: number[],
+  input: number,
+  inIntervals: number[],
+) {
   // assert ...
   // 数组长度 >= 2
   // out段数是in的整数倍
   // in是从小到大排列
 
   if (input <= inIntervals[0]) return outIntervals[0];
-  if (input >= inIntervals[inIntervals.length - 1]) return outIntervals[outIntervals.length - 1];
+  if (input >= inIntervals[inIntervals.length - 1])
+    return outIntervals[outIntervals.length - 1];
 
   let newInIntervals = inIntervals;
 
   // 统一分段数
   if (inIntervals.length < outIntervals.length) {
-    newInIntervals = new Array(outIntervals.length);
+    newInIntervals = Array.from({length: outIntervals.length});
     for (let indexOfOut = 0; indexOfOut < outIntervals.length; indexOfOut++) {
-      let indexOfIn = indexOfOut * ((inIntervals.length - 1) / (outIntervals.length - 1));
-      newInIntervals[indexOfOut] = indexOfIn % 1 === 0
-        ? inIntervals[indexOfIn]
-        : lerp(
-          inIntervals[Math.floor(indexOfIn)],
-          inIntervals[Math.ceil(indexOfIn)],
-          indexOfIn - Math.floor(indexOfIn),
-        );
+      let indexOfIn =
+        indexOfOut * ((inIntervals.length - 1) / (outIntervals.length - 1));
+      newInIntervals[indexOfOut] =
+        indexOfIn % 1 === 0
+          ? inIntervals[indexOfIn]
+          : lerp(
+              inIntervals[Math.floor(indexOfIn)],
+              inIntervals[Math.ceil(indexOfIn)],
+              indexOfIn - Math.floor(indexOfIn),
+            );
     }
   }
 
@@ -50,7 +68,13 @@ function mapPiecewise(outIntervals: number[], input: number, inIntervals: number
   for (let i = 0; i < outIntervals.length - 1; i++) {
     // 找到input所在定义域（可否用库函数优化？）
     if (input > inIntervals[i + 1]) continue;
-    return map(outIntervals[i], outIntervals[i + 1], input, inIntervals[i], inIntervals[i + 1]);
+    return map(
+      outIntervals[i],
+      outIntervals[i + 1],
+      input,
+      inIntervals[i],
+      inIntervals[i + 1],
+    );
   }
 }
 

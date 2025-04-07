@@ -1,6 +1,6 @@
-import { SkyConType } from '@/types/skycon';
+import { SkyConType } from "@/types/skycon";
 
-import { AQIType } from '@/types/general';
+import { AQIType } from "@/types/general";
 
 export interface HourlyData {
   status: string;
@@ -24,16 +24,16 @@ export interface HourlyData {
 export type HourlyGeneralType<T = number> = {
   datetime: string;
   value: T;
-}
+};
 
 export type HourlyPrecipitationType = {
   datetime: string;
   value: number;
   probability: number;
-}
+};
 
 export type HourlyWindType = {
   datetime: string;
   speed: number;
   direction: number;
-}
+};

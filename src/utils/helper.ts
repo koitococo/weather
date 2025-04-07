@@ -1,5 +1,5 @@
 export function cls(...args: (string | undefined)[]) {
-  return args.filter(Boolean).join(' ');
+  return args.filter(Boolean).join(" ");
 }
 
 export function extractArrayOrString(arrOrStr: string | string[]) {

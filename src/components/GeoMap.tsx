@@ -1,26 +1,41 @@
-import { Box, BoxProps, Button, Group, Text } from '@mantine/core';
-import { getMapObject } from '@/utils/location';
-import { HTMLAttributes, useCallback, useEffect, useRef, useState } from 'react';
-import { ReGeocodeResult } from '@/types/location';
-import { Plus } from 'tabler-icons-react';
-import useSWR from 'swr';
-import axios from 'axios';
-import { LocationType } from '@/pages';
+import { Box, BoxProps, Button, Group, Text } from "@mantine/core";
+import { loadAmapSdk } from "@/utils/location";
+import {
+  HTMLAttributes,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import { ReGeocodeResult } from "@/types/location";
+import { Plus } from "tabler-icons-react";
+import useSWR from "swr";
+import axios from "axios";
+import { LocationType } from "@/app/page";
 
 export interface GeoMapProps extends BoxProps, HTMLAttributes<HTMLDivElement> {
   AMapKey: string;
   coordinate?: [number, number];
   onChangeCoord?: (coord: AMap.LngLat, info: ReGeocodeResult) => void;
   pinList?: LocationType[];
-  setPinList?: (val: (LocationType[] | ((prevState: LocationType[]) => LocationType[]))) => void;
+  setPinList?: (
+    val: LocationType[] | ((prevState: LocationType[]) => LocationType[]),
+  ) => void;
 }
 
 export function parsePosition(position?: string): [number, number] | undefined {
   if (!position) return undefined;
-  return position.split(',').map(l => Number(l)) as [number, number];
+  return position.split(",").map((l) => Number(l)) as [number, number];
 }
 
-export default function GeoMap({ AMapKey, coordinate, onChangeCoord, pinList, setPinList, ...props }: GeoMapProps) {
+export default function GeoMap({
+  AMapKey,
+  coordinate,
+  onChangeCoord,
+  pinList,
+  setPinList,
+  ...props
+}: GeoMapProps) {
   const map = useRef<AMap.Map>();
   const marker = useRef<AMap.Marker>();
   const AMap = useRef<any>();
@@ -28,9 +43,14 @@ export default function GeoMap({ AMapKey, coordinate, onChangeCoord, pinList, se
   const [lnglat, setLnglat] = useState<AMap.LngLat>();
 
   const { data: info, isLoading } = useSWR<ReGeocodeResult>(
-    lnglat ? ['/api/geocode', lnglat.toString()] : null,
-    async ([url, coord]: [string, string | undefined]) => (await axios.get(url, { params: { coord } })).data,
-    { revalidateIfStale: false, revalidateOnFocus: false, revalidateOnReconnect: false },
+    lnglat ? ["/api/geocode", lnglat.toString()] : null,
+    async ([url, coord]: [string, string | undefined]) =>
+      (await axios.get(url, { params: { coord } })).data,
+    {
+      revalidateIfStale: false,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+    },
   );
 
   const handleClick = useCallback((e: any) => {
@@ -38,13 +58,13 @@ export default function GeoMap({ AMapKey, coordinate, onChangeCoord, pinList, se
   }, []);
 
   const initMap = async () => {
-    AMap.current = await getMapObject(AMapKey, ['AMap.Geocoder']);
-    map.current = new AMap.current.Map('map-container', {
-      mapStyle: 'amap://styles/grey',
+    AMap.current = await loadAmapSdk(AMapKey, ["AMap.Geocoder"]);
+    map.current = new AMap.current.Map("map-container", {
+      mapStyle: "amap://styles/grey",
       touchZoomCenter: 0,
       zoom: 12,
     });
-    map.current?.on('click', handleClick);
+    map.current?.on("click", handleClick);
   };
 
   const addOrUpdateMarker = async (lnglat: AMap.LngLat | [number, number]) => {
@@ -81,28 +101,37 @@ export default function GeoMap({ AMapKey, coordinate, onChangeCoord, pinList, se
     <Box {...props}>
       <Box id="map-container" h={400} />
       <Text size="sm" px="md" pt="md" pb="sm">
-        {isLoading ? '地址加载中...' : info?.regeocode?.formatted_address}
+        {isLoading ? "地址加载中..." : info?.regeocode?.formatted_address}
       </Text>
       <Group px="md" position="apart">
         <Group>
-          <Text size="sm">经度：{lnglat?.getLng().toFixed(5) ?? '未知'}</Text>
-          <Text size="sm">纬度：{lnglat?.getLat().toFixed(5) ?? '未知'}</Text>
+          <Text size="sm">经度：{lnglat?.getLng().toFixed(5) ?? "未知"}</Text>
+          <Text size="sm">纬度：{lnglat?.getLat().toFixed(5) ?? "未知"}</Text>
         </Group>
         {onChangeCoord ? (
           <Button
-            disabled={!lnglat
-              || !info
-              || isLoading
-              || pinList?.some(pin => {
-                const [lng, lat] = parsePosition(pin.lnglat) as [number, number];
+            disabled={
+              !lnglat ||
+              !info ||
+              isLoading ||
+              pinList?.some((pin) => {
+                const [lng, lat] = parsePosition(pin.lnglat) as [
+                  number,
+                  number,
+                ];
                 return lng === lnglat.getLng() && lat === lnglat.getLat();
               })
             }
-            onClick={lnglat && info ? () => onChangeCoord(lnglat, info) : undefined}
-            variant="outline" color="white"
+            onClick={
+              lnglat && info ? () => onChangeCoord(lnglat, info) : undefined
+            }
+            variant="outline"
+            color="white"
             leftIcon={<Plus size={16} />}
             radius="md"
-          >添加</Button>
+          >
+            添加
+          </Button>
         ) : null}
       </Group>
     </Box>

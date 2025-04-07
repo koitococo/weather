@@ -1,12 +1,12 @@
-import { RealtimeData } from '@/types/realtime';
-import { MinutelyData } from '@/types/minutely';
-import { HourlyData } from '@/types/hourly';
-import { DailyData } from '@/types/daily';
-import { WeatherAlert } from '@/types/alert';
-import { LngLatLocationType } from '@/types/general';
+import { RealtimeData } from "@/types/realtime";
+import { MinutelyData } from "@/types/minutely";
+import { HourlyData } from "@/types/hourly";
+import { DailyData } from "@/types/daily";
+import { WeatherAlert } from "@/types/alert";
+import { LngLatLocationType } from "@/types/general";
 
 export interface WeatherData {
-  status: 'ok';
+  status: "ok";
   api_version: string;
   api_status: string;
   lang: string;
@@ -27,7 +27,7 @@ export interface WeatherData {
 }
 
 export interface WeatherDataError {
-  status: 'failed';
+  status: "failed";
   lang: string;
   unit: string;
   tzshift: number;

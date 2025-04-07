@@ -3,16 +3,16 @@ import LngLat = AMap.LngLat;
 export interface GeolocationResult {
   position: LngLat;
   accuracy: number;
-  location_type: 'html5' | 'ip' | 'sdk';
+  location_type: "html5" | "ip" | "sdk";
   message: string;
   isConverted: boolean;
   info: string;
 }
 
 export interface ReGeocodeResult {
-  status: string,
-  info: string,
-  infocode: string,
+  status: string;
+  info: string;
+  infocode: string;
   regeocode: {
     addressComponent: AddressComponent;
     roads: Road[];
@@ -20,7 +20,7 @@ export interface ReGeocodeResult {
     pois: POI[];
     aois: AOI[];
     formatted_address: string;
-  }
+  };
 }
 
 export interface AddressComponent {
@@ -31,8 +31,8 @@ export interface AddressComponent {
   adcode: string;
   township: string;
   towncode: string;
-  neighborhood: { name: string, type: string };
-  building: { name: string, type: string };
+  neighborhood: { name: string; type: string };
+  building: { name: string; type: string };
   streetNumber: {
     street: string | [];
     number: string;
@@ -50,33 +50,33 @@ export interface AddressComponent {
 }
 
 export interface Road {
-  id: string,
-  name: string,
-  distance: string,
-  direction: string,
-  location: string,
+  id: string;
+  name: string;
+  distance: string;
+  direction: string;
+  location: string;
 }
 
 export interface Cross {
-  distance: string,
-  direction: string,
-  location: string,
-  first_id: string,
-  first_name: string,
-  second_id: string,
-  second_name: string,
+  distance: string;
+  direction: string;
+  location: string;
+  first_id: string;
+  first_name: string;
+  second_id: string;
+  second_name: string;
 }
 
 export interface POI {
-  id: string,
-  name: string,
-  type: string,
-  tel: string,
-  distance: string,
-  direction: string,
-  address: string,
-  location: string,
-  businessArea: string,
+  id: string;
+  name: string;
+  type: string;
+  tel: string;
+  distance: string;
+  direction: string;
+  address: string;
+  location: string;
+  businessArea: string;
 }
 
 export interface AOI {

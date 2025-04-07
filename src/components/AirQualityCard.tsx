@@ -1,40 +1,44 @@
-import DataCard, { DataCardProps } from '@/components/DataCard';
-import { Mist } from 'tabler-icons-react';
-import { Center, Flex } from '@mantine/core';
-import dynamic from 'next/dynamic';
-import { AirQualityType } from '@/types/realtime';
-import DataItems from '@/components/DataItems';
+import DataCard, { DataCardProps } from "@/components/DataCard";
+import { Mist } from "tabler-icons-react";
+import { Center, Flex } from "@mantine/core";
+import dynamic from "next/dynamic";
+import { AirQualityType } from "@/types/realtime";
+import DataItems from "@/components/DataItems";
 
 const Gauge = dynamic(
-  () => import('@ant-design/plots').then(({ Gauge }) => Gauge),
+  () => import("@ant-design/plots").then(({ Gauge }) => Gauge),
   { ssr: false },
 );
 
-export interface AirQualityCardProps extends Omit<DataCardProps, 'icon' | 'title'> {
+export interface AirQualityCardProps
+  extends Omit<DataCardProps, "icon" | "title"> {
   data?: AirQualityType;
 }
 
 export function getAQIColor(aqi?: number): string {
-  if (aqi == undefined) return '#ffffff4c';
-  if (aqi <= 50) return '#2bd92b';
-  if (aqi <= 100) return '#ecc40e';
-  if (aqi <= 150) return '#ff7e00';
-  if (aqi <= 200) return '#e53737';
-  if (aqi <= 300) return '#99004c';
-  return '#7e0023';
+  if (aqi == undefined) return "#ffffff4c";
+  if (aqi <= 50) return "#2bd92b";
+  if (aqi <= 100) return "#ecc40e";
+  if (aqi <= 150) return "#ff7e00";
+  if (aqi <= 200) return "#e53737";
+  if (aqi <= 300) return "#99004c";
+  return "#7e0023";
 }
 
 export function getAQIText(aqi?: number): string {
-  if (aqi == undefined) return '--';
-  if (aqi <= 50) return '优';
-  if (aqi <= 100) return '良';
-  if (aqi <= 150) return '轻度污染';
-  if (aqi <= 200) return '中度污染';
-  if (aqi <= 300) return '重度污染';
-  return '严重污染';
+  if (aqi == undefined) return "--";
+  if (aqi <= 50) return "优";
+  if (aqi <= 100) return "良";
+  if (aqi <= 150) return "轻度污染";
+  if (aqi <= 200) return "中度污染";
+  if (aqi <= 300) return "重度污染";
+  return "严重污染";
 }
 
-export default function AirQualityCard({ data, ...props }: AirQualityCardProps) {
+export default function AirQualityCard({
+  data,
+  ...props
+}: AirQualityCardProps) {
   const aqi = data?.aqi?.chn;
 
   return (
@@ -45,24 +49,24 @@ export default function AirQualityCard({ data, ...props }: AirQualityCardProps) 
             percent={aqi ? aqi / 500 : 0}
             indicator={false}
             innerRadius={0.8}
-            gaugeStyle={{ lineCap: 'round' }}
+            gaugeStyle={{ lineCap: "round" }}
             width={120}
             height={120}
             range={{
               ticks: [aqi ? aqi / 500 : 0.001, 1],
-              color: [getAQIColor(aqi), '#ffffff4c'],
+              color: [getAQIColor(aqi), "#ffffff4c"],
             }}
             statistic={{
               title: {
                 offsetY: -32,
-                content: `${aqi ?? '--'}`,
-                style: { fontSize: '24px' },
+                content: `${aqi ?? "--"}`,
+                style: { fontSize: "24px" },
               },
               content: {
                 content: getAQIText(aqi),
                 style: {
-                  fontSize: '14px',
-                  color: '#fff',
+                  fontSize: "14px",
+                  color: "#fff",
                 },
               },
             }}
@@ -72,9 +76,30 @@ export default function AirQualityCard({ data, ...props }: AirQualityCardProps) 
           <DataItems
             spacing={2}
             data={[
-              { title: <span>PM<sub>10</sub></span>, value: data?.pm10 },
-              { title: <span>NO<sub>2</sub></span>, value: data?.no2 },
-              { title: <span>O<sub>3</sub></span>, value: data?.o3 },
+              {
+                title: (
+                  <span>
+                    PM<sub>10</sub>
+                  </span>
+                ),
+                value: data?.pm10,
+              },
+              {
+                title: (
+                  <span>
+                    NO<sub>2</sub>
+                  </span>
+                ),
+                value: data?.no2,
+              },
+              {
+                title: (
+                  <span>
+                    O<sub>3</sub>
+                  </span>
+                ),
+                value: data?.o3,
+              },
             ]}
             fallback="--"
           />
@@ -83,8 +108,22 @@ export default function AirQualityCard({ data, ...props }: AirQualityCardProps) 
           <DataItems
             spacing={2}
             data={[
-              { title: <span>PM<sub>2.5</sub></span>, value: data?.pm25 },
-              { title: <span>SO<sub>2</sub></span>, value: data?.so2 },
+              {
+                title: (
+                  <span>
+                    PM<sub>2.5</sub>
+                  </span>
+                ),
+                value: data?.pm25,
+              },
+              {
+                title: (
+                  <span>
+                    SO<sub>2</sub>
+                  </span>
+                ),
+                value: data?.so2,
+              },
               { title: <span>CO</span>, value: data?.co },
             ]}
             fallback="--"
