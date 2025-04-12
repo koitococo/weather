@@ -62,8 +62,7 @@ export default function Page({ children }: { children: React.ReactNode }) {
                 ],
               },
               ...inter.style,
-            }}
-          >
+            }}>
             {children}
           </MantineProvider>
         </AppContextProvider>

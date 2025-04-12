@@ -18,9 +18,9 @@ export interface GeoMapProps extends BoxProps, HTMLAttributes<HTMLDivElement> {
   coordinate?: [number, number];
   onChangeCoord?: (coord: AMap.LngLat, info: ReGeocodeResult) => void;
   pinList?: LocationType[];
-  setPinList?: (
-    val: LocationType[] | ((prevState: LocationType[]) => LocationType[]),
-  ) => void;
+  // setPinList?: (
+  //   val: LocationType[] | ((prevState: LocationType[]) => LocationType[]),
+  // ) => void;
 }
 
 export function parsePosition(position?: string): [number, number] | undefined {
@@ -33,7 +33,6 @@ export default function GeoMap({
   coordinate,
   onChangeCoord,
   pinList,
-  setPinList,
   ...props
 }: GeoMapProps) {
   const map = useRef<AMap.Map>();

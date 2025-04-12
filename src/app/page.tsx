@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import {
   ActionIcon,
@@ -29,16 +29,9 @@ import { useEffect, useMemo, useState } from "react";
 import { getLocation } from "@/utils/location";
 import { GeolocationError, ReGeocodeResult } from "@/types/location";
 import { notifications, Notifications } from "@mantine/notifications";
-import MinutelyCard from "@/components/MinutelyCard";
 import AlertCard from "@/components/AlertCard";
 import { useDisclosure, useLocalStorage } from "@mantine/hooks";
-import {
-  ChevronDown,
-  ChevronUp,
-  Dots,
-  MapPin,
-  Trash,
-} from "tabler-icons-react";
+import { ChevronDown, ChevronUp, Dots, MapPin, Trash } from "tabler-icons-react";
 import GeoMap, { parsePosition } from "@/components/GeoMap";
 import { cls, extractArrayOrString } from "@/utils/helper";
 import { SimpleBadge } from "@/components/SimpleBadge";
@@ -65,8 +58,7 @@ export default function Page() {
   const [locationError, setLocationError] = useState<GeolocationError>();
 
   // 选择地点弹出层开启状态
-  const [drawerOpened, { open: openDrawer, close: closeDrawer }] =
-    useDisclosure(false);
+  const [drawerOpened, { open: openDrawer, close: closeDrawer }] = useDisclosure(false);
 
   // 我的地址
   const [myAddress, setMyAddress] = useState<ReGeocodeResult>();
@@ -122,7 +114,7 @@ export default function Page() {
     // async ([url, coord]: [string, string | undefined]) =>
     // (await axios.get(url, { params: { coord } })).data,
     // To use mock data:
-    async () => await import('../mock/weather.json').then((res) => res.default) as WeatherData,
+    async () => (await import("../mock/weather.json").then((res) => res.default)) as WeatherData,
     { keepPreviousData: true },
   );
   const isLoading = weatherLoading || (!coord && !locationError);
@@ -133,8 +125,7 @@ export default function Page() {
     mutate: mutateGeo,
   } = useSWR<ReGeocodeResult>(
     coord ? ["/api/geocode", coord] : null,
-    async ([url, coord]: [string, string | undefined]) =>
-      (await axios.get(url, { params: { coord } })).data,
+    async ([url, coord]: [string, string | undefined]) => (await axios.get(url, { params: { coord } })).data,
     {
       revalidateIfStale: false,
       revalidateOnFocus: false,
@@ -205,9 +196,7 @@ export default function Page() {
   }, [geoData, isManualLocated]);
 
   const getCityAndDistrict = (info: ReGeocodeResult) => {
-    const province = extractArrayOrString(
-      info.regeocode.addressComponent.province,
-    );
+    const province = extractArrayOrString(info.regeocode.addressComponent.province);
     const cityData = info.regeocode.addressComponent.city;
     const city = Array.isArray(cityData) ? province : cityData;
     const districtData = info.regeocode.addressComponent.district;
@@ -222,9 +211,7 @@ export default function Page() {
 
   const street = useMemo(() => {
     if (geoData?.regeocode?.addressComponent) {
-      return extractArrayOrString(
-        geoData.regeocode.addressComponent.streetNumber.street,
-      );
+      return extractArrayOrString(geoData.regeocode.addressComponent.streetNumber.street);
     }
     return undefined;
   }, [geoData]);
@@ -238,20 +225,16 @@ export default function Page() {
       return [sunrise, sunset];
     }
     return [undefined, undefined];
-  }, [
-    data?.result?.daily?.astro[0].sunrise.time,
-    data?.result?.daily?.astro[0].sunset.time,
-  ]);
+  }, [data?.result?.daily?.astro[0].sunrise.time, data?.result?.daily?.astro[0].sunset.time]);
 
-  const isNight =
-    !sunrise || !sunset
-      ? undefined
-      : new Date() >= sunset || new Date() < sunrise;
+  const isNight = !sunrise || !sunset ? undefined : new Date() >= sunset || new Date() < sunrise;
   const skycon = data?.result?.realtime?.skycon;
 
   return (
     <AppShell className={`bg-fixed ${getWeatherBg(skycon, isNight)}`}>
-      <Container size="lg" p={0}>
+      <Container
+        size="lg"
+        p={0}>
         <CityOverview
           city={city?.join("")}
           street={street}
@@ -277,19 +260,11 @@ export default function Page() {
           cols={2}
           breakpoints={[{ maxWidth: 768, cols: 1 }]}
           spacing="lg"
-          mt="lg"
-        >
-          <SimpleGrid cols={1} spacing="lg">
-            <MinutelyCard
-              loading={isLoading}
-              data={data?.result?.minutely}
-              description={data?.result?.minutely?.description}
-            />
-            <AirQualityCard
-              data={data?.result?.realtime?.air_quality}
-              loading={isLoading}
-            />
-          </SimpleGrid>
+          mt="lg">
+          <AirQualityCard
+            data={data?.result?.realtime?.air_quality}
+            loading={isLoading}
+          />
           <HourlyCard
             data={data?.result?.hourly}
             skycon={skycon}
@@ -301,8 +276,12 @@ export default function Page() {
             data={data?.result?.daily}
             loading={isLoading}
           />
-          <SimpleGrid cols={1} spacing="lg">
-            <SimpleGrid cols={2} spacing="lg">
+          <SimpleGrid
+            cols={1}
+            spacing="lg">
+            <SimpleGrid
+              cols={2}
+              spacing="lg">
               <WindCard
                 data={data?.result?.realtime?.wind}
                 loading={isLoading}
@@ -319,18 +298,22 @@ export default function Page() {
             />
           </SimpleGrid>
         </SimpleGrid>
-        <Group position="center" mt="lg" spacing="sm">
+        <Group
+          position="center"
+          mt="lg"
+          spacing="sm">
           <Text size="sm">
             <a
               className="opacity-60 hover:opacity-100"
               href="https://github.com/hawa130/weather"
               target="_blank"
-              rel="noreferrer"
-            >
+              rel="noreferrer">
               GitHub
             </a>
           </Text>
-          <Text size="xs" className="opacity-60">
+          <Text
+            size="xs"
+            className="opacity-60">
             ·
           </Text>
           <Text size="sm">
@@ -339,28 +322,26 @@ export default function Page() {
               className="opacity-60 hover:opacity-100"
               href="https://www.caiyunapp.com/"
               target="_blank"
-              rel="noreferrer"
-            >
+              rel="noreferrer">
               彩云天气
             </a>
           </Text>
         </Group>
       </Container>
 
-      <Notifications position="top-right" autoClose={3700} />
+      <Notifications
+        position="top-right"
+        autoClose={3700}
+      />
 
       <Drawer
         classNames={{
-          content: cls(
-            getWeatherBgColor(skycon, isNight),
-            "bg-opacity-40 backdrop-blur",
-          ),
+          content: cls(getWeatherBgColor(skycon, isNight), "bg-opacity-40 backdrop-blur"),
           header: "bg-transparent",
         }}
         keepMounted
         opened={drawerOpened}
-        onClose={closeDrawer}
-      >
+        onClose={closeDrawer}>
         <Box mx={-12}>
           <GeoMap
             pb="md"
@@ -368,18 +349,14 @@ export default function Page() {
             AMapKey={amap_js_key}
             coordinate={parsePosition(coord)}
             pinList={locationList}
-            setPinList={setLocationList}
+            // setPinList={setLocationList}
             onChangeCoord={(c, info) => {
               const coordString = c.toString();
               setCoord(coordString);
               mutateGeo(info);
               const [province, city, district] = getCityAndDistrict(info);
-              const street = extractArrayOrString(
-                info.regeocode.addressComponent.streetNumber.street,
-              );
-              const address = extractArrayOrString(
-                info.regeocode.formatted_address,
-              );
+              const street = extractArrayOrString(info.regeocode.addressComponent.streetNumber.street);
+              const address = extractArrayOrString(info.regeocode.formatted_address);
               addToLocationList({
                 lnglat: coordString,
                 province: province ?? "",
@@ -398,7 +375,10 @@ export default function Page() {
             disabled={locating}
             icon={
               locating ? (
-                <Loader size={20} color="white" />
+                <Loader
+                  size={20}
+                  color="white"
+                />
               ) : (
                 <MapPin size={20} />
               )
@@ -407,11 +387,7 @@ export default function Page() {
             description={myAddress?.regeocode?.formatted_address ?? "未知"}
             active={!isManualLocated}
             classNames={{
-              root: cls(
-                getWeatherBgColor(skycon, isNight, true),
-                "!bg-opacity-0",
-                "hover:!bg-opacity-100",
-              ),
+              root: cls(getWeatherBgColor(skycon, isNight, true), "!bg-opacity-0", "hover:!bg-opacity-100"),
             }}
           />
           <Divider className="border-semi-transparent-dark" />
@@ -421,41 +397,27 @@ export default function Page() {
               px={20}
               component="div"
               classNames={{
-                root: cls(
-                  getWeatherBgColor(skycon, isNight, true),
-                  "!bg-opacity-0",
-                  "hover:!bg-opacity-100",
-                ),
+                root: cls(getWeatherBgColor(skycon, isNight, true), "!bg-opacity-0", "hover:!bg-opacity-100"),
               }}
-              label={
-                item.province
-                  ? `${item.city}${item.district} ${item.street}`
-                  : "坐标"
-              }
+              label={item.province ? `${item.city}${item.district} ${item.street}` : "坐标"}
               onClick={() => {
                 setCoord(item.lnglat);
                 closeDrawer();
               }}
               active={item.lnglat === coord}
-              icon={
-                <SimpleBadge className="!px-1 min-w-[1.25rem]">
-                  {index + 1}
-                </SimpleBadge>
-              }
+              icon={<SimpleBadge className="!px-1 min-w-[1.25rem]">{index + 1}</SimpleBadge>}
               description={item.address || item.lnglat}
               rightSection={
-                <Menu shadow="md" width={120} radius="md">
+                <Menu
+                  shadow="md"
+                  width={120}
+                  radius="md">
                   <Menu.Target>
                     <ActionIcon onClick={(e) => e.stopPropagation()}>
                       <Dots size={16} />
                     </ActionIcon>
                   </Menu.Target>
-                  <Menu.Dropdown
-                    className={cls(
-                      getWeatherBgColor(skycon, isNight),
-                      "border-semi-transparent-dark",
-                    )}
-                  >
+                  <Menu.Dropdown className={cls(getWeatherBgColor(skycon, isNight), "border-semi-transparent-dark")}>
                     <Menu.Item
                       py="sm"
                       icon={<ChevronUp size={16} />}
@@ -463,8 +425,7 @@ export default function Page() {
                       onClick={(e) => {
                         e.stopPropagation();
                         moveUpInLocationList(item.lnglat);
-                      }}
-                    >
+                      }}>
                       上移
                     </Menu.Item>
                     <Menu.Item
@@ -474,8 +435,7 @@ export default function Page() {
                       onClick={(e) => {
                         e.stopPropagation();
                         moveDownInLocationList(item.lnglat);
-                      }}
-                    >
+                      }}>
                       下移
                     </Menu.Item>
                     <Menu.Divider className="border-semi-transparent-dark" />
@@ -486,8 +446,7 @@ export default function Page() {
                       onClick={(e) => {
                         e.stopPropagation();
                         removeFromLocationList(item.lnglat);
-                      }}
-                    >
+                      }}>
                       删除
                     </Menu.Item>
                   </Menu.Dropdown>

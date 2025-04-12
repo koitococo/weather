@@ -1,11 +1,21 @@
 {
+  "categories": {},
+  "env": {
+    "builtin": true
+  },
+  "globals": {},
+  "ignorePatterns": [],
   "plugins": [
     "react",
     "unicorn",
     "typescript",
-    "oxc"
+    "oxc",
+    "nextjs",
+    "jsdoc",
+    "node",
+    "import",
+    "promise"
   ],
-  "categories": {},
   "rules": {
     "for-direction": "warn",
     "no-async-promise-executor": "warn",
@@ -53,9 +63,6 @@
     "no-useless-escape": "warn",
     "no-useless-rename": "warn",
     "no-with": "warn",
-    "require-yield": "warn",
-    "use-isnan": "warn",
-    "valid-typeof": "warn",
     "oxc/bad-array-method-on-arguments": "warn",
     "oxc/bad-char-at-comparison": "warn",
     "oxc/bad-comparison-sequence": "warn",
@@ -82,6 +89,7 @@
     "react/no-render-return-value": "warn",
     "react/no-string-refs": "warn",
     "react/void-dom-elements-no-children": "warn",
+    "require-yield": "warn",
     "typescript/no-duplicate-enum-values": "warn",
     "typescript/no-extra-non-null-assertion": "warn",
     "typescript/no-misused-new": "warn",
@@ -105,12 +113,24 @@
     "unicorn/no-useless-length-check": "warn",
     "unicorn/no-useless-spread": "warn",
     "unicorn/prefer-set-size": "warn",
-    "unicorn/prefer-string-starts-ends-with": "warn"
+    "unicorn/prefer-string-starts-ends-with": "warn",
+    "use-isnan": "warn",
+    "valid-typeof": "warn"
   },
   "settings": {
+    "jsdoc": {
+      "augmentsExtendsReplacesDocs": false,
+      "exemptDestructuredRootsFromChecks": false,
+      "ignoreInternal": false,
+      "ignorePrivate": false,
+      "ignoreReplacesDocs": true,
+      "implementsReplacesDocs": false,
+      "overrideReplacesDocs": true,
+      "tagNamePreference": {}
+    },
     "jsx-a11y": {
-      "polymorphicPropName": null,
-      "components": {}
+      "components": {},
+      "polymorphicPropName": null
     },
     "next": {
       "rootDir": []
@@ -118,21 +138,6 @@
     "react": {
       "formComponents": [],
       "linkComponents": []
-    },
-    "jsdoc": {
-      "ignorePrivate": false,
-      "ignoreInternal": false,
-      "ignoreReplacesDocs": true,
-      "overrideReplacesDocs": true,
-      "augmentsExtendsReplacesDocs": false,
-      "implementsReplacesDocs": false,
-      "exemptDestructuredRootsFromChecks": false,
-      "tagNamePreference": {}
     }
-  },
-  "env": {
-    "builtin": true
-  },
-  "globals": {},
-  "ignorePatterns": []
+  }
 }

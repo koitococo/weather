@@ -33,59 +33,35 @@ export type IconType =
   | "yejianzhenyu"
   | "yejianqing";
 
-function skycon2type(skycon: SkyConType): IconType {
-  switch (skycon) {
-    case "CLEAR_DAY":
-      return "qing";
-    case "CLEAR_NIGHT":
-      return "yejianqing";
-    case "PARTLY_CLOUDY_DAY":
-      return "baitianduoyun";
-    case "PARTLY_CLOUDY_NIGHT":
-      return "yejianduoyun";
-    case "CLOUDY":
-      return "yin";
-    case "LIGHT_HAZE":
-      return "wumai";
-    case "MODERATE_HAZE":
-      return "wumai";
-    case "HEAVY_HAZE":
-      return "wumai";
-    case "LIGHT_RAIN":
-      return "xiaoyu";
-    case "MODERATE_RAIN":
-      return "zhongyu";
-    case "HEAVY_RAIN":
-      return "dayu";
-    case "STORM_RAIN":
-      return "baoyu";
-    case "FOG":
-      return "wu";
-    case "LIGHT_SNOW":
-      return "xiaoxue";
-    case "MODERATE_SNOW":
-      return "zhongxue";
-    case "HEAVY_SNOW":
-      return "daxue";
-    case "STORM_SNOW":
-      return "baoxue";
-    case "DUST":
-      return "fuchen";
-    case "SAND":
-      return "qiangshachenbao";
-    case "WIND":
-      return "shachenbao";
-  }
-}
+const skyconMap: Record<SkyConType, IconType> = {
+  CLEAR_DAY: "qing",
+  CLEAR_NIGHT: "yejianqing",
+  PARTLY_CLOUDY_DAY: "baitianduoyun",
+  PARTLY_CLOUDY_NIGHT: "yejianduoyun",
+  CLOUDY: "yin",
+  LIGHT_HAZE: "wumai",
+  MODERATE_HAZE: "wumai",
+  HEAVY_HAZE: "wumai",
+  LIGHT_RAIN: "xiaoyu",
+  MODERATE_RAIN: "zhongyu",
+  HEAVY_RAIN: "dayu",
+  STORM_RAIN: "baoyu",
+  FOG: "wu",
+  LIGHT_SNOW: "xiaoxue",
+  MODERATE_SNOW: "zhongxue",
+  HEAVY_SNOW: "daxue",
+  STORM_SNOW: "baoxue",
+  DUST: "fuchen",
+  SAND: "qiangshachenbao",
+  WIND: "shachenbao",
+};
 
 export interface WeatherIconProps extends Omit<IconfontProps, "icon"> {
   skycon: SkyConType;
 }
 
 export default function WeatherIcon({ skycon, ...props }: WeatherIconProps) {
-  const iconName = skycon2type(skycon);
-
-  return <Iconfont {...props} icon={`#weather-icon-${iconName}`} />;
+  return <Iconfont {...props} icon={`#weather-icon-${skyconMap[skycon]}`} />;
 }
 
 interface IconfontProps extends HTMLAttributes<HTMLOrSVGElement> {

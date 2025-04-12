@@ -7,24 +7,37 @@
   },
   "files": {
     "ignoreUnknown": true,
-    "ignore": ["node_modules", ".next", "publc"]
+    "ignore": [
+      "node_modules",
+      ".next",
+      "publc"
+    ]
   },
   "formatter": {
     "enabled": true,
-    "indentStyle": "space"
+    "indentStyle": "space",
+    "lineWidth": 120,
+    "indentWidth": 2,
+    "bracketSpacing": true,
+    "lineEnding": "lf",
+    "formatWithErrors": true
   },
   "organizeImports": {
     "enabled": true
   },
   "linter": {
-    "enabled": false,
-    "rules": {
-      "recommended": true
-    }
+    "enabled": false
   },
   "javascript": {
     "formatter": {
-      "quoteStyle": "double"
+      "quoteStyle": "double",
+      "jsxQuoteStyle": "double",
+      "arrowParentheses": "always",
+      "bracketSameLine": true,
+      "trailingCommas": "all",
+      "semicolons": "always",
+      "quoteProperties": "asNeeded",
+      "attributePosition": "multiline"
     }
   }
 }
