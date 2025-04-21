@@ -2,7 +2,6 @@ import { DailyAstroType } from "@/types/daily";
 import DataCard, { DataCardProps } from "@/components/DataCard";
 import { Sunrise, Sunset, Sunset2 } from "tabler-icons-react";
 import DataItems from "@/components/DataItems";
-import { Flex } from "@mantine/core";
 
 export interface SunCardProps extends Omit<DataCardProps, "icon" | "title"> {
   data?: DailyAstroType;
@@ -10,8 +9,11 @@ export interface SunCardProps extends Omit<DataCardProps, "icon" | "title"> {
 
 export default function SunCard({ data, ...props }: SunCardProps) {
   return (
-    <DataCard {...props} icon={<Sunset2 size={14} />} title="日出日落">
-      <Flex className="h-full" direction="column" justify="center">
+    <DataCard
+      {...props}
+      icon={<Sunset2 size={14} />}
+      title="日出日落">
+      <div className="h-full flex flex-col justify-center">
         <DataItems
           data={[
             {
@@ -25,11 +27,11 @@ export default function SunCard({ data, ...props }: SunCardProps) {
               value: data?.sunset?.time,
             },
           ]}
-          spacing={2}
+          spacing={"xs"}
           fallback="--:--"
           align="center"
         />
-      </Flex>
+      </div>
     </DataCard>
   );
 }

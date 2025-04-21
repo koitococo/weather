@@ -1,12 +1,10 @@
 import DataCard, { DataCardProps } from "@/components/DataCard";
 import { Mist } from "tabler-icons-react";
-import { Center, Flex } from "@mantine/core";
 import { AirQualityType } from "@/types/realtime";
 import DataItems from "@/components/DataItems";
 import GaugeChart from "./GaugeChart";
 
-export interface AirQualityCardProps
-  extends Omit<DataCardProps, "icon" | "title"> {
+export interface AirQualityCardProps extends Omit<DataCardProps, "icon" | "title"> {
   data?: AirQualityType;
 }
 
@@ -30,26 +28,26 @@ export function getAQIText(aqi?: number): string {
   return "严重污染";
 }
 
-export default function AirQualityCard({
-  data,
-  ...props
-}: AirQualityCardProps) {
+export default function AirQualityCard({ data, ...props }: AirQualityCardProps) {
   const aqi = data?.aqi?.chn;
 
   return (
-    <DataCard {...props} icon={<Mist size={14} />} title="空气质量">
-      <Flex className="h-full" justify="space-around" align="center" gap="lg">
-        <Center h={120} w={120}>
+    <DataCard
+      {...props}
+      icon={<Mist size={14} />}
+      title="空气质量">
+      <div className="flex h-full justify-around items-center gap-4">
+        <div className="flex items-center justify-center h-[120px] w-[120px]">
           <GaugeChart
             value={aqi ?? 0}
             max={500}
             color={getAQIColor(aqi)}
             label={getAQIText(aqi)}
           />
-        </Center>
-        <Center>
+        </div>
+        <div className="flex items-center justify-center">
           <DataItems
-            spacing={2}
+            spacing={"xs"}
             data={[
               {
                 title: (
@@ -78,10 +76,10 @@ export default function AirQualityCard({
             ]}
             fallback="--"
           />
-        </Center>
-        <Center>
+        </div>
+        <div className="flex items-center justify-center">
           <DataItems
-            spacing={2}
+            spacing={"xs"}
             data={[
               {
                 title: (
@@ -103,8 +101,8 @@ export default function AirQualityCard({
             ]}
             fallback="--"
           />
-        </Center>
-      </Flex>
+        </div>
+      </div>
     </DataCard>
   );
 }

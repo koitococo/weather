@@ -1,11 +1,10 @@
 import DataCard, { DataCardProps } from "@/components/DataCard";
 import { WeatherAlertContent } from "@/types/alert";
 import { AlertTriangle, ChevronUp } from "tabler-icons-react";
-import { ActionIcon, Box, Group, Text, Transition } from "@mantine/core";
-import { cls } from "@/utils/helper";
 import { useState } from "react";
-import { useElementSize } from "@mantine/hooks";
-import { SimpleBadge } from "@/components/SimpleBadge";
+import { useElementSize } from "@mantine/hooks"; // Keep hook for height calculation
+import { SimpleBadge } from "@/components/SimpleBadge"; // Assuming this is a custom/shadcn component
+import clsx from "clsx"; // Use clsx for conditional classes
 
 export interface AlertCardProps extends Omit<DataCardProps, "icon" | "title"> {
   data?: WeatherAlertContent[];
@@ -21,8 +20,7 @@ export default function AlertCard({
 
   return (
     <DataCard
-      className={cls(className, "!border-0")}
-      pb={0}
+      className={clsx(className, "!border-0")} // Assuming DataCard accepts className
       {...props}
       onTitleClick={() => setIsHidden((prev) => !prev)}
       icon={<AlertTriangle size={16} />}
@@ -31,55 +29,71 @@ export default function AlertCard({
         isHidden ? undefined : getLevelColor(data?.[0]?.code.slice(2, 4))
       }
       extra={
-        <Group>
-          <Transition transition="slide-up" mounted={isHidden}>
-            {(styles) => (
-              <SimpleBadge style={styles}>{data?.length ?? 0} 则</SimpleBadge>
+        <div className="flex items-center gap-2">
+          {/* Badge with opacity transition */}
+          <div
+            className={clsx(
+              "transition-opacity duration-200",
+              isHidden ? "opacity-100" : "opacity-0 invisible", // Use invisible to prevent interaction when hidden
             )}
-          </Transition>
-          <ActionIcon size={20}>
+          >
+            {/* Render badge only when needed or always render and control visibility */}
+            {isHidden && <SimpleBadge>{data?.length ?? 0} 则</SimpleBadge>}
+            {/* Alternative: Always render, control visibility via parent div */}
+            {/* <SimpleBadge>{data?.length ?? 0} 则</SimpleBadge> */}
+          </div>
+          {/* Button instead of ActionIcon */}
+          <button
+            aria-label="Toggle alert details"
+            className="flex h-5 w-5 items-center justify-center rounded hover:bg-gray-100 dark:hover:bg-gray-700" // Basic styling, adjust as needed
+          >
             <ChevronUp
-              className={cls(
-                isHidden ? "rotate-180" : undefined,
-                "transition-transform",
+              size={20}
+              className={clsx(
+                "transition-transform duration-200",
+                isHidden ? "rotate-180" : "rotate-0",
               )}
             />
-          </ActionIcon>
-        </Group>
+          </button>
+        </div>
       }
     >
-      <Box
-        mx={-12}
-        h={isHidden ? 0 : height}
+      {/* Accordion content area */}
+      <div
+        style={{ height: isHidden ? 0 : height }}
         className="overflow-hidden transition-[height] duration-200"
+        // Removed mx={-12} -> adjust padding within DataCard or here if needed
       >
-        <Box ref={ref}>
+        <div ref={ref}>
           {data?.map((alert) => {
             const [type, level] = getAlertTypeLevel(alert.code);
             return (
-              <Box
+              <div
                 key={alert.alertId}
-                className="border-t border-semi-transparent"
-                px="md"
-                py="sm"
-                bg={getLevelColor(alert.code.slice(2, 4))}
+                className="border-t border-black/10 px-4 py-2 dark:border-white/10" // Replaced border-semi-transparent, px="md", py="sm"
+                style={{
+                  backgroundColor: getLevelColor(alert.code.slice(2, 4)),
+                }} // Replaced bg prop
               >
-                <Group spacing="sm" position="apart">
-                  <Text weight="bold">
+                <div className="flex items-center justify-between gap-2"> {/* Replaced Group */}
+                  <span className="font-bold"> {/* Replaced Text */}
                     {type}
                     {level}预警
-                  </Text>
-                </Group>
-                <Text>{alert.description}</Text>
-              </Box>
+                  </span>
+                </div>
+                <p className="mt-1 text-sm"> {/* Replaced Text */}
+                  {alert.description}
+                </p>
+              </div>
             );
           })}
-        </Box>
-      </Box>
+        </div>
+      </div>
     </DataCard>
   );
 }
 
+// Helper functions remain the same
 function getAlertType(type: string) {
   switch (type) {
     case "01":
@@ -141,17 +155,18 @@ function getAlertLevel(level: string) {
 }
 
 function getLevelColor(level?: string) {
+  // Using rgba for background colors with opacity
   switch (level) {
     case "00":
-      return "rgba(255,255,255,0.15)";
+      return "rgba(255,255,255,0.15)"; // White
     case "01":
-      return "rgba(49,101,255,0.3)";
+      return "rgba(49,101,255,0.3)"; // Blue
     case "02":
-      return "rgba(250,237,30,0.3)";
+      return "rgba(250,237,30,0.3)"; // Yellow
     case "03":
-      return "rgba(247,141,25,0.4)";
+      return "rgba(247,141,25,0.4)"; // Orange
     case "04":
-      return "rgba(215,47,40,0.4)";
+      return "rgba(215,47,40,0.4)"; // Red
     default:
       return "transparent";
   }

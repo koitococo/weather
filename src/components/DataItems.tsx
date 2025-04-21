@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { Group, MantineNumberSize, Table } from "@mantine/core";
+import { cn } from "@/lib/utils"; // Assuming shadcn/ui setup with a utility function
 
 export interface DataItemsProps {
   data: {
@@ -9,54 +9,74 @@ export interface DataItemsProps {
     fallback?: ReactNode;
   }[];
   fallback?: ReactNode;
-  spacing?: MantineNumberSize;
+  spacing?: "xs" | "sm" | "md" | "lg" | "xl"; // Map Mantine sizes to Tailwind spacing if needed
   withBorder?: boolean;
   align?: "left" | "right" | "center";
 }
 
+// Helper to map spacing prop to Tailwind padding classes (adjust values as needed)
+const spacingMap = {
+  xs: "py-1",
+  sm: "py-2",
+  md: "py-3",
+  lg: "py-4",
+  xl: "py-5",
+};
+
+// Helper to map align prop to Tailwind text alignment classes
+const alignMap = {
+  left: "text-left",
+  right: "text-right",
+  center: "text-center",
+};
+
 export default function DataItems({
   data,
   fallback,
-  spacing,
+  spacing = "sm",
   withBorder,
-  align,
+  align = "left",
 }: DataItemsProps) {
+  const verticalPaddingClass = spacingMap[spacing] || spacingMap.sm;
+  const textAlignClass = alignMap[align] || alignMap.left;
+
   return (
-    <Table
-      verticalSpacing={spacing}
-      withBorder={withBorder}
-      withColumnBorders={withBorder}
+    <div
+      className={cn(
+        "w-full",
+        withBorder && "border border-border divide-y divide-border"
+      )}
     >
-      <tbody>
-        {data.map((item, index) => (
-          <tr key={index}>
-            <td
-              style={{
-                opacity: 0.75,
-                border: withBorder ? undefined : "none",
-                textAlign: align,
-              }}
-            >
-              {item.icon ? (
-                <Group spacing="sm">
-                  {item.icon}
-                  {item.title}
-                </Group>
-              ) : (
-                item.title
-              )}
-            </td>
-            <td
-              style={{
-                border: withBorder ? undefined : "none",
-                textAlign: align,
-              }}
-            >
-              {item.value ?? item.fallback ?? fallback}
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </Table>
+      {data.map((item, index) => (
+        <div
+          key={index}
+          className={cn(
+            "flex justify-between items-center",
+            verticalPaddingClass,
+            "px-2" // Add horizontal padding if needed
+          )}
+        >
+          <div
+            className={cn(
+              "text-muted-foreground", // Use a muted color for the title cell
+              textAlignClass,
+              "flex-1 pr-4" // Add padding between title and value
+            )}
+          >
+            {item.icon ? (
+              <div className="flex items-center gap-2">
+                {item.icon}
+                <span>{item.title}</span>
+              </div>
+            ) : (
+              item.title
+            )}
+          </div>
+          <div className={cn(textAlignClass, "flex-1")}>
+            {item.value ?? item.fallback ?? fallback}
+          </div>
+        </div>
+      ))}
+    </div>
   );
 }

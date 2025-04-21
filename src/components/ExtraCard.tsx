@@ -11,7 +11,6 @@ import {
   Temperature,
   Umbrella,
 } from "tabler-icons-react";
-import { Group, SimpleGrid, Stack, Text } from "@mantine/core";
 import { ReactNode } from "react";
 
 export interface ExtraCardProps extends Omit<DataCardProps, "icon" | "title"> {
@@ -27,15 +26,8 @@ export default function ExtraCard({
 }: ExtraCardProps) {
   return (
     <DataCard {...props} icon={<Flare size={14} />} title="其他数据">
-      <SimpleGrid
-        cols={4}
-        breakpoints={[
-          { maxWidth: 400, cols: 2 },
-          { maxWidth: 500, cols: 3 },
-          { maxWidth: 768, cols: 4 },
-          { maxWidth: 1000, cols: 3 },
-        ]}
-        className="h-full"
+      <div
+        className="grid h-full grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-3"
       >
         <StatDataDisplay
           icon={<Temperature size={16} />}
@@ -97,7 +89,7 @@ export default function ExtraCard({
           value={data?.dswrf.toFixed(1)}
           uint="W/m²"
         />
-      </SimpleGrid>
+      </div>
     </DataCard>
   );
 }
@@ -111,20 +103,20 @@ export interface StaticDataDisplayProps {
 
 function StatDataDisplay({ icon, title, value, uint }: StaticDataDisplayProps) {
   return (
-    <Stack justify="center" spacing={0}>
-      <Group spacing="xs" opacity={0.8}>
+    <div className="flex flex-col justify-center">
+      <div className="flex items-center space-x-1 opacity-80">
         {icon}
-        <Text size="sm">{title}</Text>
-      </Group>
-      <Group spacing="xs" align="flex-end">
-        <Text size={20} weight={500}>
+        <span className="text-sm">{title}</span>
+      </div>
+      <div className="flex items-end space-x-1">
+        <span className="text-xl font-medium">
           {value ?? "--"}
-        </Text>
-        <Text pb={3} size="sm" opacity={0.8}>
+        </span>
+        <span className="pb-1 text-sm opacity-80">
           {uint}
-        </Text>
-      </Group>
-    </Stack>
+        </span>
+      </div>
+    </div>
   );
 }
 

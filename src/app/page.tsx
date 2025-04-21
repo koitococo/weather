@@ -1,41 +1,42 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import {
-  ActionIcon,
-  AppShell,
-  Box,
-  Container,
-  Divider,
   Drawer,
-  Group,
-  Loader,
-  Menu,
-  NavLink,
-  SimpleGrid,
-  Text,
-} from "@mantine/core";
+  DrawerContent,
+} from "@/components/ui/drawer";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Toaster } from "@/components/ui/toaster";
+import { useToast } from "@/hooks/use-toast";
+
 import useSWR from "swr";
-import CityOverview from "@/components/CityOverview";
-import AirQualityCard from "@/components/AirQualityCard";
+import CityOverview from "@/components/CityOverview"; // Keep custom components
+import AirQualityCard from "@/components/AirQualityCard"; // Keep custom components
 import { WeatherData } from "@/types/weather";
-import HourlyCard from "@/components/HourlyCard";
-import WindCard from "@/components/WindCard";
-import SunCard from "@/components/SunCard";
-import ExtraCard from "@/components/ExtraCard";
-import DailyCard from "@/components/DailyCard";
+import HourlyCard from "@/components/HourlyCard"; // Keep custom components
+import WindCard from "@/components/WindCard"; // Keep custom components
+import SunCard from "@/components/SunCard"; // Keep custom components
+import ExtraCard from "@/components/ExtraCard"; // Keep custom components
+import DailyCard from "@/components/DailyCard"; // Keep custom components
 import { getWeatherBg, getWeatherBgColor } from "@/utils/weather";
 import axios from "axios";
 import { useEffect, useMemo, useState } from "react";
 import { getLocation } from "@/utils/location";
 import { GeolocationError, ReGeocodeResult } from "@/types/location";
-import { notifications, Notifications } from "@mantine/notifications";
-import AlertCard from "@/components/AlertCard";
-import { useDisclosure, useLocalStorage } from "@mantine/hooks";
-import { ChevronDown, ChevronUp, Dots, MapPin, Trash } from "tabler-icons-react";
-import GeoMap, { parsePosition } from "@/components/GeoMap";
-import { cls, extractArrayOrString } from "@/utils/helper";
-import { SimpleBadge } from "@/components/SimpleBadge";
+import AlertCard from "@/components/AlertCard"; // Keep custom components
+import { useLocalStorage } from "@mantine/hooks"; // Keep this hook for now, or replace with another solution like usehooks-ts
+import { ChevronDown, ChevronUp, MoreHorizontal, MapPin, Trash2, Loader2 } from "lucide-react"; // Use lucide-react icons
+import GeoMap, { parsePosition } from "@/components/GeoMap"; // Keep custom components
+import { extractArrayOrString } from "@/utils/helper";
+import { SimpleBadge } from "@/components/SimpleBadge"; // Keep custom component or replace with shadcn Badge/div
 import { useAppContext } from "@/utils/ctx";
+import clsx from "clsx";
 
 export interface LocationType {
   lnglat: string;
@@ -53,12 +54,16 @@ export default function Page() {
     throw new Error("AMapKey is required");
   }
 
+  const { toast } = useToast();
+
   // 定位状态与错误
   const [locating, setLocating] = useState<boolean>(false);
   const [locationError, setLocationError] = useState<GeolocationError>();
 
   // 选择地点弹出层开启状态
-  const [drawerOpened, { open: openDrawer, close: closeDrawer }] = useDisclosure(false);
+  const [drawerOpened, setDrawerOpened] = useState(false);
+  const openDrawer = () => setDrawerOpened(true);
+  const closeDrawer = () => setDrawerOpened(false);
 
   // 我的地址
   const [myAddress, setMyAddress] = useState<ReGeocodeResult>();
@@ -152,22 +157,11 @@ export default function Page() {
       }
 
       console.log("定位失败:", err.message);
-      notifications.show({
-        radius: "md",
-        color: "red",
+      toast({
+        variant: "destructive",
         title: "定位失败",
-        message: "请检查浏览器是否授予位置权限",
-        styles: (theme) => ({
-          root: {
-            backgroundColor: "rgba(50,50,50,0.3)",
-            borderColor: "rgba(200,200,200,0.17)",
-            backdropFilter: "blur(8px)",
-          },
-          description: {
-            color: theme.white,
-            opacity: 0.8,
-          },
-        }),
+        description: "请检查浏览器是否授予位置权限",
+        // Shadcn toast styling is handled via its own variants and global CSS
       });
     }
     setLocating(false);
@@ -187,6 +181,7 @@ export default function Page() {
 
   useEffect(() => {
     handleGetLocation();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -225,16 +220,14 @@ export default function Page() {
       return [sunrise, sunset];
     }
     return [undefined, undefined];
-  }, [data?.result?.daily?.astro[0].sunrise.time, data?.result?.daily?.astro[0].sunset.time]);
+  }, [data?.result?.daily?.astro]); // Dependency array simplified
 
   const isNight = !sunrise || !sunset ? undefined : new Date() >= sunset || new Date() < sunrise;
   const skycon = data?.result?.realtime?.skycon;
 
   return (
-    <AppShell className={`bg-fixed ${getWeatherBg(skycon, isNight)}`}>
-      <Container
-        size="lg"
-        p={0}>
+    <div className={`min-h-screen bg-fixed ${getWeatherBg(skycon, isNight)} text-white`}>
+      <div className="container mx-auto px-4 py-4 lg:py-8">
         <CityOverview
           city={city?.join("")}
           street={street}
@@ -246,21 +239,17 @@ export default function Page() {
           locating={locating}
           geoLoading={geoFetching}
           showLocationIcon={locating || !isManualLocated}
-          onGetLocation={openDrawer}
+          onGetLocation={openDrawer} // Trigger drawer open
           weatherValidating={isValidating}
         />
         {data?.result?.alert?.content.length ? (
           <AlertCard
-            mt={16}
+            className="mt-4"
             data={data?.result?.alert?.content}
             loading={isLoading}
           />
         ) : null}
-        <SimpleGrid
-          cols={2}
-          breakpoints={[{ maxWidth: 768, cols: 1 }]}
-          spacing="lg"
-          mt="lg">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6 mt-4 lg:mt-6">
           <AirQualityCard
             data={data?.result?.realtime?.air_quality}
             loading={isLoading}
@@ -272,16 +261,12 @@ export default function Page() {
             loading={isLoading}
           />
           <DailyCard
-            className="col-span-1"
+            className="md:col-span-1" // Adjusted for grid layout
             data={data?.result?.daily}
             loading={isLoading}
           />
-          <SimpleGrid
-            cols={1}
-            spacing="lg">
-            <SimpleGrid
-              cols={2}
-              spacing="lg">
+          <div className="grid grid-cols-1 gap-4 lg:gap-6">
+            <div className="grid grid-cols-2 gap-4 lg:gap-6">
               <WindCard
                 data={data?.result?.realtime?.wind}
                 loading={isLoading}
@@ -290,172 +275,185 @@ export default function Page() {
                 data={data?.result?.daily?.astro[0]}
                 loading={isLoading}
               />
-            </SimpleGrid>
+            </div>
             <ExtraCard
               data={data?.result?.realtime}
               probability={data?.result?.hourly?.precipitation[0].probability}
               loading={isLoading}
             />
-          </SimpleGrid>
-        </SimpleGrid>
-        <Group
-          position="center"
-          mt="lg"
-          spacing="sm">
-          <Text size="sm">
+          </div>
+        </div>
+        <div className="flex justify-center items-center mt-6 lg:mt-8 gap-2">
+          <p className="text-sm">
             <a
-              className="opacity-60 hover:opacity-100"
+              className="opacity-60 hover:opacity-100 transition-opacity"
               href="https://github.com/hawa130/weather"
               target="_blank"
               rel="noreferrer">
               GitHub
             </a>
-          </Text>
-          <Text
-            size="xs"
-            className="opacity-60">
-            ·
-          </Text>
-          <Text size="sm">
+          </p>
+          <p className="text-xs opacity-60">·</p>
+          <p className="text-sm">
             <span className="opacity-60">数据来源：</span>
             <a
-              className="opacity-60 hover:opacity-100"
+              className="opacity-60 hover:opacity-100 transition-opacity"
               href="https://www.caiyunapp.com/"
               target="_blank"
               rel="noreferrer">
               彩云天气
             </a>
-          </Text>
-        </Group>
-      </Container>
+          </p>
+        </div>
+      </div>
 
-      <Notifications
-        position="top-right"
-        autoClose={3700}
-      />
+      <Toaster />
 
       <Drawer
-        classNames={{
-          content: cls(getWeatherBgColor(skycon, isNight), "bg-opacity-40 backdrop-blur"),
-          header: "bg-transparent",
-        }}
-        keepMounted
-        opened={drawerOpened}
-        onClose={closeDrawer}>
-        <Box mx={-12}>
-          <GeoMap
-            pb="md"
-            mt={-46}
-            AMapKey={amap_js_key}
-            coordinate={parsePosition(coord)}
-            pinList={locationList}
-            // setPinList={setLocationList}
-            onChangeCoord={(c, info) => {
-              const coordString = c.toString();
-              setCoord(coordString);
-              mutateGeo(info);
-              const [province, city, district] = getCityAndDistrict(info);
-              const street = extractArrayOrString(info.regeocode.addressComponent.streetNumber.street);
-              const address = extractArrayOrString(info.regeocode.formatted_address);
-              addToLocationList({
-                lnglat: coordString,
-                province: province ?? "",
-                city: city ?? "",
-                district: district ?? "",
-                address: address ?? "",
-                street: street ?? "",
-              });
-              closeDrawer();
-            }}
-          />
-          <Divider className="border-semi-transparent-dark" />
-          <NavLink
-            px="xl"
-            label={locating ? "定位中..." : "我的位置"}
-            disabled={locating}
-            icon={
-              locating ? (
-                <Loader
-                  size={20}
-                  color="white"
-                />
-              ) : (
-                <MapPin size={20} />
-              )
-            }
-            onClick={() => handleGetLocation().then(() => closeDrawer())}
-            description={myAddress?.regeocode?.formatted_address ?? "未知"}
-            active={!isManualLocated}
-            classNames={{
-              root: cls(getWeatherBgColor(skycon, isNight, true), "!bg-opacity-0", "hover:!bg-opacity-100"),
-            }}
-          />
-          <Divider className="border-semi-transparent-dark" />
-          {locationList.map((item, index) => (
-            <NavLink
-              key={item.lnglat}
-              px={20}
-              component="div"
-              classNames={{
-                root: cls(getWeatherBgColor(skycon, isNight, true), "!bg-opacity-0", "hover:!bg-opacity-100"),
-              }}
-              label={item.province ? `${item.city}${item.district} ${item.street}` : "坐标"}
-              onClick={() => {
-                setCoord(item.lnglat);
+        open={drawerOpened}
+        onOpenChange={setDrawerOpened}>
+        <DrawerContent
+          className={clsx(
+            getWeatherBgColor(skycon, isNight),
+            "bg-opacity-40 backdrop-blur text-white border-t border-white/20", // Adjusted styling
+          )}>
+          {/* Removed DrawerHeader, Title, Description for custom layout */}
+          <div className="mx-auto w-full max-w-lg">
+            {/* Removed mx={-12} - handle padding within content */}
+            <GeoMap
+              className="pb-2 mt-2" // Keep existing class
+              AMapKey={amap_js_key}
+              coordinate={parsePosition(coord)}
+              pinList={locationList}
+              // setPinList={setLocationList}
+              onChangeCoord={(c, info) => {
+                const coordString = c.toString();
+                setCoord(coordString);
+                mutateGeo(info);
+                const [province, city, district] = getCityAndDistrict(info);
+                const street = extractArrayOrString(info.regeocode.addressComponent.streetNumber.street);
+                const address = extractArrayOrString(info.regeocode.formatted_address);
+                addToLocationList({
+                  lnglat: coordString,
+                  province: province ?? "",
+                  city: city ?? "",
+                  district: district ?? "",
+                  address: address ?? "",
+                  street: street ?? "",
+                });
                 closeDrawer();
               }}
-              active={item.lnglat === coord}
-              icon={<SimpleBadge className="!px-1 min-w-[1.25rem]">{index + 1}</SimpleBadge>}
-              description={item.address || item.lnglat}
-              rightSection={
-                <Menu
-                  shadow="md"
-                  width={120}
-                  radius="md">
-                  <Menu.Target>
-                    <ActionIcon onClick={(e) => e.stopPropagation()}>
-                      <Dots size={16} />
-                    </ActionIcon>
-                  </Menu.Target>
-                  <Menu.Dropdown className={cls(getWeatherBgColor(skycon, isNight), "border-semi-transparent-dark")}>
-                    <Menu.Item
-                      py="sm"
-                      icon={<ChevronUp size={16} />}
-                      disabled={index === 0}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        moveUpInLocationList(item.lnglat);
-                      }}>
-                      上移
-                    </Menu.Item>
-                    <Menu.Item
-                      py="sm"
-                      icon={<ChevronDown size={16} />}
-                      disabled={index === locationList.length - 1}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        moveDownInLocationList(item.lnglat);
-                      }}>
-                      下移
-                    </Menu.Item>
-                    <Menu.Divider className="border-semi-transparent-dark" />
-                    <Menu.Item
-                      py="sm"
-                      color="red"
-                      icon={<Trash size={16} />}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        removeFromLocationList(item.lnglat);
-                      }}>
-                      删除
-                    </Menu.Item>
-                  </Menu.Dropdown>
-                </Menu>
-              }
             />
-          ))}
-        </Box>
+            <hr className="border-t border-white/20" /> {/* Replaced Divider */}
+            {/* My Location Item */}
+            <div
+              className={clsx(
+                "flex items-center px-5 py-2.5 cursor-pointer transition-colors",
+                getWeatherBgColor(skycon, isNight, true), // Use hover variant color
+                "!bg-opacity-0 hover:!bg-opacity-20", // Adjusted hover effect
+                {
+                  "!bg-opacity-20": !isManualLocated, // Active state
+                  "opacity-50 cursor-not-allowed": locating, // Disabled state
+                },
+              )}
+              onClick={() => {
+                if (!locating) {
+                  handleGetLocation().then(() => closeDrawer());
+                }
+              }}>
+              <div className="mr-3 flex-shrink-0 w-5 h-5 flex items-center justify-center">
+                {locating ? <Loader2 className="h-5 w-5 animate-spin" /> : <MapPin size={20} />}
+              </div>
+              <div className="flex-grow overflow-hidden">
+                <div className="text-sm font-medium">{locating ? "定位中..." : "我的位置"}</div>
+                <div className="text-xs opacity-80 truncate">{myAddress?.regeocode?.formatted_address ?? "未知"}</div>
+              </div>
+            </div>
+            <hr className="border-t border-white/20" /> {/* Replaced Divider */}
+            {/* Location List Items */}
+            {locationList.map((item, index) => (
+              <div
+                key={item.lnglat}
+                className={clsx(
+                  "flex items-center px-5 py-2.5 cursor-pointer transition-colors",
+                  getWeatherBgColor(skycon, isNight, true), // Use hover variant color
+                  "!bg-opacity-0 hover:!bg-opacity-20", // Adjusted hover effect
+                  { "!bg-opacity-20": item.lnglat === coord }, // Active state
+                )}
+                onClick={() => {
+                  setCoord(item.lnglat);
+                  closeDrawer();
+                }}>
+                <div className="mr-3 flex-shrink-0">
+                  {/* Using SimpleBadge or replace with shadcn Badge/div */}
+                  <SimpleBadge className="!px-1 min-w-[1.25rem]">{index + 1}</SimpleBadge>
+                  {/* Example with shadcn Badge:
+                  <Badge variant="secondary" className="px-1.5 py-0.5 text-xs">{index + 1}</Badge>
+                  */}
+                </div>
+                <div className="flex-grow overflow-hidden">
+                  <div className="text-sm font-medium truncate">
+                    {item.province ? `${item.city}${item.district} ${item.street}` : "坐标"}
+                  </div>
+                  <div className="text-xs opacity-80 truncate">{item.address || item.lnglat}</div>
+                </div>
+                <div className="ml-2 flex-shrink-0">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8 text-white hover:bg-white/10" // Adjusted styling
+                        onClick={(e) => e.stopPropagation()}>
+                        <MoreHorizontal className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent
+                      align="end"
+                      className={clsx(
+                        getWeatherBgColor(skycon, isNight),
+                        "bg-opacity-80 backdrop-blur border-white/20 text-white", // Adjusted styling
+                      )}>
+                      <DropdownMenuItem
+                        disabled={index === 0}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          moveUpInLocationList(item.lnglat);
+                        }}
+                        className="cursor-pointer">
+                        <ChevronUp className="mr-2 h-4 w-4" />
+                        <span>上移</span>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        disabled={index === locationList.length - 1}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          moveDownInLocationList(item.lnglat);
+                        }}
+                        className="cursor-pointer">
+                        <ChevronDown className="mr-2 h-4 w-4" />
+                        <span>下移</span>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator className="bg-white/20" />
+                      <DropdownMenuItem
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          removeFromLocationList(item.lnglat);
+                        }}
+                        className="text-red-400 focus:text-red-400 focus:bg-red-400/10 cursor-pointer">
+                        <Trash2 className="mr-2 h-4 w-4" />
+                        <span>删除</span>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+              </div>
+            ))}
+            {/* Optional: Add DrawerFooter if needed */}
+            {/* <DrawerFooter> <Button>Submit</Button> <DrawerClose asChild> <Button variant="outline">Cancel</Button> </DrawerClose> </DrawerFooter> */}
+          </div>
+        </DrawerContent>
       </Drawer>
-    </AppShell>
+    </div>
   );
 }

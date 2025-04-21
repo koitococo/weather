@@ -1,11 +1,11 @@
 import { Inter } from "next/font/google";
-import { cls } from "@/utils/helper";
 import { getWeatherBgColor } from "@/utils/weather";
 import { getSkyConText, SkyConType } from "@/types/skycon";
 import AQIBadge from "@/components/AQIBadge";
 import React from "react";
 import { AreaChart as ReChartsAreaChart, Area, ResponsiveContainer, LabelList } from "recharts";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import clsx from "clsx";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,7 +23,7 @@ function AreaChartTooltip({ data, skycon, isNight }: { data: PlotData; skycon?: 
   return (
     <div
       style={inter.style}
-      className={cls(
+      className={clsx(
         skycon ? `${getWeatherBgColor(skycon, isNight)}` : "bg-black bg-opacity-90",
         "py-2 px-3 rounded-lg border-t border-semi-transparent-dark text-white",
       )}>
@@ -103,9 +103,9 @@ export function AreaChart2({
             content={
               <ChartTooltipContent
                 nameKey="time"
-                customRenderer={(item) => {
+                customRenderer={(item, index) => {
                   return (
-                    <AreaChartTooltip data={item.payload} skycon={skycon} isNight={isNight}/>
+                    <AreaChartTooltip data={item.payload} skycon={skycon} isNight={isNight} key={`area-chart-tooltip-${index}`}/>
                   );
                 }}
               />
@@ -119,9 +119,8 @@ export function AreaChart2({
               fill: "#fff",
             }}
             stroke="#fff"
-            fillOpacity={0.4}
             activeDot={{
-              r: 6,
+              r: 4,
             }}>
             <LabelList
               position="top"

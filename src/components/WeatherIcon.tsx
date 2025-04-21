@@ -1,6 +1,6 @@
 import { HTMLAttributes } from "react";
-import { cls } from "@/utils/helper";
 import { SkyConType } from "@/types/skycon";
+import { cn } from "@/lib/utils";
 
 export type IconType =
   | "baoyu"
@@ -70,7 +70,7 @@ interface IconfontProps extends HTMLAttributes<HTMLOrSVGElement> {
 
 function Iconfont({ icon, className, ...props }: IconfontProps) {
   return (
-    <svg className={cls("iconfont", className)} aria-hidden="true" {...props}>
+    <svg className={cn("iconfont", className)} aria-hidden="true" {...props}>
       <use xlinkHref={icon} />
     </svg>
   );

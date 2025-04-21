@@ -3,7 +3,6 @@ import DataCard, { DataCardProps } from "@/components/DataCard";
 import { CalendarEvent } from "tabler-icons-react";
 import { getSkyConText, SkyConType } from "@/types/skycon";
 import { useMemo } from "react";
-import { Table } from "@mantine/core";
 import WeatherIcon from "@/components/WeatherIcon";
 import AQIBadge from "@/components/AQIBadge";
 import { useElementSize } from "@mantine/hooks";
@@ -28,29 +27,22 @@ export default function DailyCard({ data, ...props }: DailyCardProps) {
     let minTemperature: number | undefined = Infinity;
     let maxTemperature: number | undefined = -Infinity;
     return [
-      Array.from(
-        { length: data?.temperature.length ?? 10 },
-        (_, i): DailyRowData => {
-          minTemperature =
-            data?.temperature[i].min && minTemperature
-              ? Math.min(minTemperature, data.temperature[i].min)
-              : undefined;
-          maxTemperature =
-            data?.temperature[i].max && maxTemperature
-              ? Math.max(maxTemperature, data.temperature[i].max)
-              : undefined;
-          return {
-            date: data?.temperature[i].date,
-            skycon: data?.skycon[i].value,
-            precipitation: data?.precipitation[i].avg,
-            precipitationProbability: data?.precipitation[i].probability,
-            temperature: data?.temperature[i].avg,
-            temperatureMax: data?.temperature[i].max,
-            temperatureMin: data?.temperature[i].min,
-            AQI: data?.air_quality.aqi[i].avg.chn,
-          };
-        },
-      ),
+      Array.from({ length: data?.temperature.length ?? 10 }, (_, i): DailyRowData => {
+        minTemperature =
+          data?.temperature[i].min && minTemperature ? Math.min(minTemperature, data.temperature[i].min) : undefined;
+        maxTemperature =
+          data?.temperature[i].max && maxTemperature ? Math.max(maxTemperature, data.temperature[i].max) : undefined;
+        return {
+          date: data?.temperature[i].date,
+          skycon: data?.skycon[i].value,
+          precipitation: data?.precipitation[i].avg,
+          precipitationProbability: data?.precipitation[i].probability,
+          temperature: data?.temperature[i].avg,
+          temperatureMax: data?.temperature[i].max,
+          temperatureMin: data?.temperature[i].min,
+          AQI: data?.air_quality.aqi[i].avg.chn,
+        };
+      }),
       minTemperature,
       maxTemperature,
     ];
@@ -63,92 +55,78 @@ export default function DailyCard({ data, ...props }: DailyCardProps) {
       ref={ref}
       {...props}
       icon={<CalendarEvent size={14} />}
-      title={`10日预报`}
-    >
-      <Table style={{ tableLayout: "fixed" }}>
-        <tbody>
-          {rows.map((row, index) => {
-            const date = row.date
-              ? new Date(row.date)
-              : new Date(Date.now() + 86400000 * index);
-            return (
-              <tr key={date.getTime()}>
-                <td style={{ border: "none", width: width > 400 ? 80 : 40 }}>
-                  {width > 400
-                    ? `${date.toLocaleDateString("zh-CN", {
-                        month: "2-digit",
-                        day: "2-digit",
-                      })} `
-                    : null}
-                  {date.toDateString() === new Date().toDateString()
-                    ? "今天"
-                    : date.toLocaleDateString("zh-CN", { weekday: "short" })}
-                </td>
-                {width > 320 ? (
-                  <td
-                    style={{ border: "none", textAlign: "center", width: 80 }}
-                  >
-                    <AQIBadge
-                      aqi={row.AQI}
-                      showVal={row.AQI != undefined}
-                      short
-                    />
-                  </td>
-                ) : null}
-                <td
-                  style={{
-                    border: "none",
-                    textAlign: width > 500 ? "right" : "center",
-                    width: width > 500 ? 64 : 32,
-                  }}
-                >
-                  {row.skycon ? (
-                    <WeatherIcon
-                      className="w-5 h-5 inline-block"
-                      skycon={row.skycon}
-                    />
-                  ) : null}
-                </td>
-                {width > 500 ? (
-                  <td
-                    style={{
-                      border: "none",
-                      textAlign: "left",
-                      opacity: 0.8,
-                      width: 64,
-                    }}
-                  >
-                    {row.skycon ? getSkyConText(row.skycon) : "--"}
-                  </td>
-                ) : null}
-                <td
-                  style={{
-                    border: "none",
-                    textAlign: "right",
-                    opacity: 0.8,
-                    width: 40,
-                  }}
-                >
-                  {row.temperatureMin?.toFixed(0) ?? "--"}°
-                </td>
-                <td
-                  style={{ border: "none", width: width > 450 ? 120 : "100%" }}
-                >
-                  <TemperatureIndicator
-                    min={row.temperatureMin}
-                    max={row.temperatureMax}
-                    lower={minT}
-                    upper={maxT}
+      title={`10日预报`}>
+      <div className="flex flex-col gap-2 text-sm">
+        {rows.map((row, index) => {
+          const date = row.date ? new Date(row.date) : new Date(Date.now() + 86400000 * index);
+          const isToday = date.toDateString() === new Date().toDateString();
+          const formattedDate = date.toLocaleDateString("zh-CN", {
+            month: "2-digit",
+            day: "2-digit",
+          });
+          const weekday = date.toLocaleDateString("zh-CN", { weekday: "short" });
+
+          return (
+            <div
+              key={date.getTime()}
+              className="flex items-center justify-between gap-2">
+              {/* Date */}
+              <div className="flex-shrink-0 w-[40px] sm:w-[80px] text-left">
+                <span className="hidden sm:inline">{formattedDate} </span>
+                <span>{isToday ? "今天" : weekday}</span>
+              </div>
+
+              {/* AQI Badge (visible on medium screens and up) */}
+              {width > 320 && (
+                <div className="flex-shrink-0 w-[80px] text-center">
+                  <AQIBadge
+                    aqi={row.AQI}
+                    showVal={row.AQI != undefined}
+                    short
                   />
-                </td>
-                <td style={{ border: "none", width: 40 }}>
-                  {row.temperatureMax?.toFixed(0) ?? "--"}°
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </Table>
+                </div>
+              )}
+
+              {/* Weather Icon */}
+              <div className={`flex-shrink-0 text-center ${width > 500 ? "w-[64px] text-right" : "w-[32px]"}`}>
+                {row.skycon ? (
+                  <WeatherIcon
+                    className="w-5 h-5 inline-block"
+                    skycon={row.skycon}
+                  />
+                ) : (
+                  <span className="inline-block w-5 h-5"></span> // Placeholder for alignment
+                )}
+              </div>
+
+              {/* Skycon Text (visible on large screens and up) */}
+              {width > 500 && (
+                <div className="flex-shrink-0 w-[64px] text-left opacity-80">
+                  {row.skycon ? getSkyConText(row.skycon) : "--"}
+                </div>
+              )}
+
+              {/* Min Temperature */}
+              <div className="flex-shrink-0 w-[40px] text-right opacity-80">
+                {row.temperatureMin?.toFixed(0) ?? "--"}°
+              </div>
+
+              {/* Temperature Indicator */}
+              <div className="flex-grow min-w-[50px] sm:min-w-[120px]">
+                <TemperatureIndicator
+                  min={row.temperatureMin}
+                  max={row.temperatureMax}
+                  lower={minT}
+                  upper={maxT}
+                />
+              </div>
+
+              {/* Max Temperature */}
+              <div className="flex-shrink-0 w-[40px] text-left">{row.temperatureMax?.toFixed(0) ?? "--"}°</div>
+            </div>
+          );
+        })}
+      </div>
     </DataCard>
   );
 }
@@ -160,17 +138,8 @@ interface TemperatureIndicatorProps {
   upper?: number;
 }
 
-function TemperatureIndicator({
-  min,
-  max,
-  lower,
-  upper,
-}: TemperatureIndicatorProps) {
-  const isValid =
-    min != undefined &&
-    max != undefined &&
-    lower != undefined &&
-    upper != undefined;
+function TemperatureIndicator({ min, max, lower, upper }: TemperatureIndicatorProps) {
+  const isValid = min != undefined && max != undefined && lower != undefined && upper != undefined;
   const [left, right] = isValid ? calcBoundary(lower, upper) : [0, 1];
 
   const bgSize = 300 / (right - left);
@@ -188,8 +157,7 @@ function TemperatureIndicator({
           marginLeft: `${mLeftPercent}%`,
           marginRight: `${mRightPercent}%`,
           clipPath: "inset(0 round 4px)",
-        }}
-      >
+        }}>
         <div
           className="absolute inset-0 bg-gradient-linear origin-left transition-transform duration-700"
           style={{ transform: `scaleX(${bgSize}%) translateX(-${bgPos}%)` }}

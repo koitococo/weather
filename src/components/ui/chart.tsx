@@ -102,7 +102,7 @@ const ChartTooltipContent = React.forwardRef<
       indicator?: "line" | "dot" | "dashed";
       nameKey?: string;
       labelKey?: string;
-      customRenderer?: (payload: any) => React.ReactNode;
+      customRenderer?: (payload: any, index: number) => React.ReactNode;
     }
 >(
   (
@@ -133,8 +133,8 @@ const ChartTooltipContent = React.forwardRef<
         <div
           className="grid gap-1.5"
           ref={ref}>
-          {payload.map((item, _) => {
-            return customRenderer(item);
+          {payload.map((item, index) => {
+            return customRenderer(item, index);
           })}
         </div>
       );

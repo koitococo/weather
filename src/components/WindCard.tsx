@@ -1,7 +1,6 @@
 import DataCard, { DataCardProps } from "@/components/DataCard";
 import { WindType } from "@/types/general";
 import { ArrowDownTail, Wind } from "tabler-icons-react";
-import { Box, Center, Flex, Text } from "@mantine/core";
 import { useMemo } from "react";
 
 export interface WindCardProps extends Omit<DataCardProps, "icon" | "title"> {
@@ -63,21 +62,20 @@ export default function WindCard({ data, ...props }: WindCardProps) {
   }, [data?.speed]);
 
   return (
-    <DataCard {...props} icon={<Wind size={14} />} title="风">
-      <Flex className="h-full" justify="space-between" align="center">
-        <Box>
-          <Text weight="bold">{windText}</Text>
-          <Flex columnGap="md" wrap="wrap">
-            <Text size="sm" weight="bold">
-              {windLevel}
-            </Text>
-            <Text size="sm" opacity={0.8}>
-              {data?.speed.toFixed(0) ?? "--"} km/h
-            </Text>
-          </Flex>
-        </Box>
-        <Center mt={-20}>
-          <Box className="w-20 h-20 relative rounded-full border-[20px] border-semi-transparent">
+    <DataCard
+      {...props}
+      icon={<Wind size={14} />}
+      title="风">
+      <div className="flex h-full justify-between items-center">
+        <div>
+          <div className="font-bold">{windText}</div>
+          <div className="flex flex-wrap gap-x-4">
+            <div className="text-sm font-bold">{windLevel}</div>
+            <div className="text-sm opacity-80">{data?.speed.toFixed(0) ?? "--"} km/h</div>
+          </div>
+        </div>
+        <div className="flex items-center justify-center -mt-5">
+          <div className="w-20 h-20 relative rounded-full border-[20px] border-semi-transparent">
             <ArrowDownTail
               className="absolute top-1/2 left-1/2 transition-transform duration-700"
               size={36}
@@ -86,39 +84,13 @@ export default function WindCard({ data, ...props }: WindCardProps) {
                 transform: `translate(-50%, -50%) rotate(${data?.direction ?? 180}deg)`,
               }}
             />
-            <Text
-              className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-full"
-              size="xs"
-              opacity={0.8}
-            >
-              北
-            </Text>
-            <Text
-              className="absolute top-1/2 right-0 translate-x-full -translate-y-1/2"
-              size="xs"
-              px={4}
-              opacity={0.8}
-            >
-              东
-            </Text>
-            <Text
-              className="absolute top-1/2 left-0 -translate-x-full -translate-y-1/2"
-              size="xs"
-              px={4}
-              opacity={0.8}
-            >
-              西
-            </Text>
-            <Text
-              className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-full"
-              size="xs"
-              opacity={0.8}
-            >
-              南
-            </Text>
-          </Box>
-        </Center>
-      </Flex>
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-full text-xs opacity-80">北</div>
+            <div className="absolute top-1/2 right-0 translate-x-full -translate-y-1/2 text-xs px-1 opacity-80">东</div>
+            <div className="absolute top-1/2 left-0 -translate-x-full -translate-y-1/2 text-xs px-1 opacity-80">西</div>
+            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-full text-xs opacity-80">南</div>
+          </div>
+        </div>
+      </div>
     </DataCard>
   );
 }

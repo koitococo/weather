@@ -1,4 +1,3 @@
-import { Box, BoxProps, Button, Group, Text } from "@mantine/core";
 import { loadAmapSdk } from "@/utils/location";
 import {
   HTMLAttributes,
@@ -12,15 +11,13 @@ import { Plus } from "tabler-icons-react";
 import useSWR from "swr";
 import axios from "axios";
 import { LocationType } from "@/app/page";
+import { Button } from "@/components/ui/button";
 
-export interface GeoMapProps extends BoxProps, HTMLAttributes<HTMLDivElement> {
+export interface GeoMapProps extends HTMLAttributes<HTMLDivElement> {
   AMapKey: string;
   coordinate?: [number, number];
   onChangeCoord?: (coord: AMap.LngLat, info: ReGeocodeResult) => void;
   pinList?: LocationType[];
-  // setPinList?: (
-  //   val: LocationType[] | ((prevState: LocationType[]) => LocationType[]),
-  // ) => void;
 }
 
 export function parsePosition(position?: string): [number, number] | undefined {
@@ -33,6 +30,7 @@ export default function GeoMap({
   coordinate,
   onChangeCoord,
   pinList,
+  className,
   ...props
 }: GeoMapProps) {
   const map = useRef<AMap.Map>();
@@ -81,58 +79,64 @@ export default function GeoMap({
 
   useEffect(() => {
     initMap();
-  }, []);
+    // Clean up map instance on unmount
+    return () => {
+      map.current?.destroy();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Ensure initMap runs only once
 
   useEffect(() => {
     if (coordinate && map.current && AMap.current) {
-      map.current?.setCenter(coordinate);
-      setLnglat(new AMap.current.LngLat(coordinate[0], coordinate[1]));
+      const currentCenter = map.current.getCenter();
+      // Only set center and lnglat if the coordinate actually changed
+      if (currentCenter?.getLng() !== coordinate[0] || currentCenter?.getLat() !== coordinate[1]) {
+        map.current?.setCenter(coordinate);
+        setLnglat(new AMap.current.LngLat(coordinate[0], coordinate[1]));
+      }
     }
-  }, [coordinate]);
+  }, [coordinate]); // Depend only on coordinate
 
   useEffect(() => {
     if (lnglat) {
       addOrUpdateMarker(lnglat);
     }
-  }, [lnglat]);
+     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lnglat]); // Depend only on lnglat
 
   return (
-    <Box {...props}>
-      <Box id="map-container" h={400} />
-      <Text size="sm" px="md" pt="md" pb="sm">
-        {isLoading ? "地址加载中..." : info?.regeocode?.formatted_address}
-      </Text>
-      <Group px="md" position="apart">
-        <Group>
-          <Text size="sm">经度：{lnglat?.getLng().toFixed(5) ?? "未知"}</Text>
-          <Text size="sm">纬度：{lnglat?.getLat().toFixed(5) ?? "未知"}</Text>
-        </Group>
+    <div className={className} {...props}>
+      <div id="map-container" className="h-[400px]" />
+      <p className="text-sm px-4 pt-4 pb-2">
+        {isLoading ? "地址加载中..." : info?.regeocode?.formatted_address ?? "点击地图选择位置"}
+      </p>
+      <div className="flex items-center justify-between px-4 pb-4">
+        <div className="flex items-center space-x-4">
+          <span className="text-sm">经度：{lnglat?.getLng().toFixed(5) ?? "未知"}</span>
+          <span className="text-sm">纬度：{lnglat?.getLat().toFixed(5) ?? "未知"}</span>
+        </div>
         {onChangeCoord ? (
           <Button
+            variant="outline"
+            size="sm" // Shadcn size prop
             disabled={
               !lnglat ||
               !info ||
               isLoading ||
               pinList?.some((pin) => {
-                const [lng, lat] = parsePosition(pin.lnglat) as [
-                  number,
-                  number,
-                ];
-                return lng === lnglat.getLng() && lat === lnglat.getLat();
+                const pos = parsePosition(pin.lnglat);
+                return pos && pos[0] === lnglat.getLng() && pos[1] === lnglat.getLat();
               })
             }
             onClick={
               lnglat && info ? () => onChangeCoord(lnglat, info) : undefined
-            }
-            variant="outline"
-            color="white"
-            leftIcon={<Plus size={16} />}
-            radius="md"
+            } // FIXME: white text on white background
           >
+            <Plus className="mr-2 h-4 w-4" />
             添加
           </Button>
         ) : null}
-      </Group>
-    </Box>
+      </div>
+    </div>
   );
 }

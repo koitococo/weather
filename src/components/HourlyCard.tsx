@@ -1,12 +1,12 @@
 import { HourlyData } from "@/types/hourly";
 import DataCard, { DataCardProps } from "@/components/DataCard";
 import { Clock } from "tabler-icons-react";
-import { Box, Center, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
 import { useMemo } from "react";
 import { SkyConType } from "@/types/skycon";
 import WeatherIcon from "@/components/WeatherIcon";
 import AQIBadge from "@/components/AQIBadge";
 import { AreaChart2, PlotData } from "./AreaChart";
+import { ScrollArea, ScrollBar } from "./ui/scroll-area";
 
 export default function HourlyCard({
   data,
@@ -19,7 +19,7 @@ export default function HourlyCard({
   isNight?: boolean;
 }) {
   const plotData = useMemo(() => {
-    const d = Array.from(
+    return Array.from(
       { length: data?.temperature.length ?? 0 },
       (_, i) =>
         ({
@@ -29,8 +29,6 @@ export default function HourlyCard({
           aqi: data!.air_quality.aqi[i].value.chn,
         }) as PlotData,
     );
-    console.log(JSON.stringify(d));
-    return d;
   }, [data]);
 
   return (
@@ -38,48 +36,27 @@ export default function HourlyCard({
       {...props}
       icon={<Clock size={14} />}
       title="48小时预报">
-      <Box className="h-full flex flex-col justify-between">
+      <div className="h-full flex flex-col justify-between">
         {data ? (
           <>
-            <Text align="center">{data?.description}</Text>
-            <ScrollArea
-              mx={-12}
-              mb={-8}
-              scrollbarSize={6}
-              styles={(_theme) => ({
-                scrollbar: {
-                  '&[data-orientation="horizontal"]': {
-                    transition: "height 150ms ease-in-out",
-                  },
-                  '&[data-orientation="horizontal"]:hover': {
-                    height: "8px",
-                    transition: "height 150ms ease-in-out",
-                    background: "rgba(255,255,255,0.1)",
-                  },
-                },
-              })}>
-              <Box
-                h={100}
-                w={3400}>
+            <div className="text-center">{data?.description}</div>
+            <ScrollArea className="mx-[-12px] mb-[-8px] [&_[data-orientation=horizontal]]:transition-[height] [&_[data-orientation=horizontal]]:duration-150 [&_[data-orientation=horizontal]:hover]:h-2 [&_[data-orientation=horizontal]:hover]:bg-white/10">
+              <div className="h-[100px] w-[3400px]">
                 <AreaChart2
                   skycon={skycon}
                   plotData={plotData}
                   isNight={isNight}
                 />
-              </Box>
-              <SimpleGrid
-                w={3400}
-                cols={plotData.length}
-                pb={8}
-                className="justify-items-center"
-                spacing={0}>
+              </div>
+              <div
+                className="w-[3400px] pb-2 grid justify-items-center gap-0"
+                style={{ gridTemplateColumns: `repeat(${plotData.length}, minmax(0, 1fr))` }}>
                 {plotData.map((data) => {
                   const date = new Date(data.time);
                   const hour = date.getHours();
                   return (
-                    <Stack
-                      spacing={4}
-                      align="center"
+                    <div
+                      className="flex flex-col items-center gap-1"
                       key={data.time}>
                       <WeatherIcon
                         className="w-5 h-5"
@@ -89,9 +66,7 @@ export default function HourlyCard({
                         aqi={data.aqi}
                         short
                       />
-                      <Text
-                        size="xs"
-                        opacity={0.8}>
+                      <div className="text-xs opacity-80">
                         {hour === 0
                           ? date.toLocaleDateString("zh-CN", {
                               month: "short",
@@ -101,17 +76,18 @@ export default function HourlyCard({
                               hour: "2-digit",
                               minute: "2-digit",
                             })}
-                      </Text>
-                    </Stack>
+                      </div>
+                    </div>
                   );
                 })}
-              </SimpleGrid>
+              </div>
+              <ScrollBar orientation="horizontal" />
             </ScrollArea>
           </>
         ) : (
-          <Center h={192}>暂无数据</Center>
+          <div className="justify-center h-48">暂无数据</div>
         )}
-      </Box>
+      </div>
     </DataCard>
   );
 }
