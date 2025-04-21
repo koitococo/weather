@@ -282,7 +282,7 @@ export default function Page() {
           <p className="text-sm">
             <a
               className="opacity-60 hover:opacity-100 transition-opacity"
-              href="https://github.com/hawa130/weather"
+              href="https://github.com/koitococo/weather"
               target="_blank"
               rel="noreferrer">
               GitHub

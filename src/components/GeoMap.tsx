@@ -33,9 +33,9 @@ export default function GeoMap({
   className,
   ...props
 }: GeoMapProps) {
-  const map = useRef<AMap.Map>();
-  const marker = useRef<AMap.Marker>();
-  const AMap = useRef<any>();
+  const map = useRef<AMap.Map>(undefined);
+  const marker = useRef<AMap.Marker>(undefined);
+  const AMap = useRef<any>(undefined);
 
   const [lnglat, setLnglat] = useState<AMap.LngLat>();
 
