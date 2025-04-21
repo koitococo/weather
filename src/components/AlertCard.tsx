@@ -20,7 +20,7 @@ export default function AlertCard({
 
   return (
     <DataCard
-      className={clsx(className, "!border-0")} // Assuming DataCard accepts className
+      className={clsx(className, "!border-0")}
       {...props}
       onTitleClick={() => setIsHidden((prev) => !prev)}
       icon={<AlertTriangle size={16} />}
@@ -37,12 +37,8 @@ export default function AlertCard({
               isHidden ? "opacity-100" : "opacity-0 invisible", // Use invisible to prevent interaction when hidden
             )}
           >
-            {/* Render badge only when needed or always render and control visibility */}
             {isHidden && <SimpleBadge>{data?.length ?? 0} 则</SimpleBadge>}
-            {/* Alternative: Always render, control visibility via parent div */}
-            {/* <SimpleBadge>{data?.length ?? 0} 则</SimpleBadge> */}
           </div>
-          {/* Button instead of ActionIcon */}
           <button
             aria-label="Toggle alert details"
             className="flex h-5 w-5 items-center justify-center rounded hover:bg-gray-100 dark:hover:bg-gray-700" // Basic styling, adjust as needed

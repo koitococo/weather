@@ -37,6 +37,7 @@ import { extractArrayOrString } from "@/utils/helper";
 import { SimpleBadge } from "@/components/SimpleBadge"; // Keep custom component or replace with shadcn Badge/div
 import { useAppContext } from "@/utils/ctx";
 import clsx from "clsx";
+import { DialogTitle } from "@radix-ui/react-dialog";
 
 export interface LocationType {
   lnglat: string;
@@ -317,9 +318,8 @@ export default function Page() {
             getWeatherBgColor(skycon, isNight),
             "bg-opacity-40 backdrop-blur text-white border-t border-white/20", // Adjusted styling
           )}>
-          {/* Removed DrawerHeader, Title, Description for custom layout */}
+        <DialogTitle  />
           <div className="mx-auto w-full max-w-lg">
-            {/* Removed mx={-12} - handle padding within content */}
             <GeoMap
               className="pb-2 mt-2" // Keep existing class
               AMapKey={amap_js_key}
