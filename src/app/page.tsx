@@ -1,10 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import {
-  Drawer,
-  DrawerContent,
-} from "@/components/ui/drawer";
+import { Drawer, DrawerContent } from "@/components/ui/drawer";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -117,10 +114,7 @@ export default function Page() {
     isValidating,
   } = useSWR<WeatherData>(
     coord ? ["/api/weather", coord] : null,
-    // async ([url, coord]: [string, string | undefined]) =>
-    // (await axios.get(url, { params: { coord } })).data,
-    // To use mock data:
-    async () => (await import("../mock/weather.json").then((res) => res.default)) as WeatherData,
+    async ([url, coord]: [string, string | undefined]) => (await axios.get(url, { params: { coord } })).data,
     { keepPreviousData: true },
   );
   const isLoading = weatherLoading || (!coord && !locationError);
@@ -267,7 +261,7 @@ export default function Page() {
             loading={isLoading}
           />
           <div className="grid grid-cols-1 gap-4 lg:gap-6">
-            <div className="grid grid-cols-2 gap-4 lg:gap-6">
+            <div className="min-[360px]:grid grid-cols-2 max-[360px]:flex flex-col gap-4 lg:gap-6">
               <WindCard
                 data={data?.result?.realtime?.wind}
                 loading={isLoading}
@@ -318,7 +312,7 @@ export default function Page() {
             getWeatherBgColor(skycon, isNight),
             "bg-opacity-40 backdrop-blur text-white border-t border-white/20", // Adjusted styling
           )}>
-        <DialogTitle  />
+          <DialogTitle />
           <div className="mx-auto w-full max-w-lg">
             <GeoMap
               className="pb-2 mt-2" // Keep existing class

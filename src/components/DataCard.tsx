@@ -38,7 +38,7 @@ const DataCard = forwardRef(
         ref={ref}
         {...props}
         className={cn(
-          "relative flex flex-col overflow-hidden rounded bg-white/20 px-4 pb-2 text-card-foreground shadow-sm", // Adjusted base styles: bg, border, text color, padding
+          "relative flex flex-col overflow-hidden rounded bg-white/20 px-3 pb-2 text-card-foreground shadow-sm", // Adjusted base styles: bg, border, text color, padding
           noHeader ? "pt-2" : "", // Conditional top padding
           loading ? "" : "backdrop-blur-sm", // Apply blur only when not loading
           className,
@@ -46,7 +46,7 @@ const DataCard = forwardRef(
       >
         {/* Loading Overlay */}
         {loading && (
-          <div className="absolute inset-0 z-10 flex items-center justify-center rounded-lg bg-background/60 backdrop-blur-sm">
+          <div className="absolute inset-0 z-10 flex items-center justify-center rounded-lg backdrop-blur-sm">
             {/* Add a spinner component here if desired */}
             <span className="text-sm text-muted-foreground">Loading...</span>
           </div>
@@ -56,7 +56,7 @@ const DataCard = forwardRef(
         {!noHeader && (
           <div
             className={cn(
-              "flex items-center justify-between gap-2 px-3 py-2 -mx-3", // Adjusted padding/margin to match Mantine Group approx.
+              "flex items-center justify-between gap-2 py-2 px-3 -mx-3",
               "transition-colors duration-200",
               onTitleClick ? "cursor-pointer" : "",
               titleBg ? `bg-[${titleBg}]` : "bg-opacity-80",

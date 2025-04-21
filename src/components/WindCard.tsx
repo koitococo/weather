@@ -66,28 +66,34 @@ export default function WindCard({ data, ...props }: WindCardProps) {
       {...props}
       icon={<Wind size={14} />}
       title="风">
-      <div className="flex h-full justify-between items-center">
-        <div>
-          <div className="font-bold">{windText}</div>
-          <div className="flex flex-wrap gap-x-4">
-            <div className="text-sm font-bold">{windLevel}</div>
-            <div className="text-sm opacity-80">{data?.speed.toFixed(0) ?? "--"} km/h</div>
+      <div className="flex h-full justify-center items-center">
+        <div className="max-w-[200px] flex flex-row flex-grow w-full h-full justify-between items-center">
+          <div>
+            <div className="font-bold">{windText}</div>
+            <div className="flex flex-wrap gap-x-4">
+              <div className="text-sm font-bold">{windLevel}</div>
+              <div className="text-sm opacity-80">{data?.speed.toFixed(0) ?? "--"} km/h</div>
+            </div>
           </div>
-        </div>
-        <div className="flex items-center justify-center -mt-5">
-          <div className="w-20 h-20 relative rounded-full border-[20px] border-semi-transparent">
-            <ArrowDownTail
-              className="absolute top-1/2 left-1/2 transition-transform duration-700"
-              size={36}
-              strokeWidth={1}
-              style={{
-                transform: `translate(-50%, -50%) rotate(${data?.direction ?? 180}deg)`,
-              }}
-            />
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-full text-xs opacity-80">北</div>
-            <div className="absolute top-1/2 right-0 translate-x-full -translate-y-1/2 text-xs px-1 opacity-80">东</div>
-            <div className="absolute top-1/2 left-0 -translate-x-full -translate-y-1/2 text-xs px-1 opacity-80">西</div>
-            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-full text-xs opacity-80">南</div>
+          <div className="flex items-center justify-center -mt-5">
+            <div className="w-20 h-20 relative rounded-full border-[20px] border-semi-transparent">
+              <ArrowDownTail
+                className="absolute top-1/2 left-1/2 transition-transform duration-700"
+                size={36}
+                strokeWidth={1}
+                style={{
+                  transform: `translate(-50%, -50%) rotate(${data?.direction ?? 180}deg)`,
+                }}
+              />
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-full text-xs opacity-80">北</div>
+              <div className="absolute top-1/2 right-0 translate-x-full -translate-y-1/2 text-xs px-1 opacity-80">
+                东
+              </div>
+              <div className="absolute top-1/2 left-0 -translate-x-full -translate-y-1/2 text-xs px-1 opacity-80">
+                西
+              </div>
+              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-full text-xs opacity-80">南</div>
+            </div>
           </div>
         </div>
       </div>

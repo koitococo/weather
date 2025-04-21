@@ -53,14 +53,12 @@ export default function DataItems({
           className={cn(
             "flex justify-between items-center",
             verticalPaddingClass,
-            "px-2" // Add horizontal padding if needed
           )}
         >
           <div
             className={cn(
-              "text-muted-foreground", // Use a muted color for the title cell
               textAlignClass,
-              "flex-1 pr-4" // Add padding between title and value
+              "flex pr-2" // Add padding between title and value
             )}
           >
             {item.icon ? (
@@ -72,7 +70,7 @@ export default function DataItems({
               item.title
             )}
           </div>
-          <div className={cn(textAlignClass, "flex-1")}>
+          <div className={cn(textAlignClass, "flex")}>
             {item.value ?? item.fallback ?? fallback}
           </div>
         </div>

@@ -106,10 +106,10 @@ function StatDataDisplay({ icon, title, value, uint }: StaticDataDisplayProps) {
     <div className="flex flex-col justify-center">
       <div className="flex items-center space-x-1 opacity-80">
         {icon}
-        <span className="text-sm">{title}</span>
+        <span className="text-xs">{title}</span>
       </div>
       <div className="flex items-end space-x-1">
-        <span className="text-xl font-medium">
+        <span className="text-lg font-medium">
           {value ?? "--"}
         </span>
         <span className="pb-1 text-sm opacity-80">
