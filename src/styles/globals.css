@@ -16,8 +16,6 @@
   overflow: hidden;
 }
 
-
-
 @layer base {
   :root {
     --background: 0 0% 3.9%;
@@ -47,8 +45,6 @@
     --radius: 0.5rem;
   }
 }
-
-
 
 @layer base {
   * {

@@ -18,7 +18,7 @@ export default function Page({ children }: { children: React.ReactNode }) {
         {/* eslint-disable-next-line no-sync-scripts */}
         <script src="/iconfont.js"></script>
       </head>
-      <body style={inter.style}>
+      <body className={inter.className}>
         <AppContextProvider amap_js_key={AMAP_JS_KEY}>{children}</AppContextProvider>
       </body>
     </html>
