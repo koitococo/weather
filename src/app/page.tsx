@@ -260,8 +260,8 @@ export default function Page() {
             data={data?.result?.daily}
             loading={isLoading}
           />
-          <div className="grid grid-cols-1 gap-4 lg:gap-6">
-            <div className="min-[360px]:grid grid-cols-2 max-[360px]:flex flex-col gap-4 lg:gap-6">
+          <div className="grid grid-cols-1 gap-3 lg:gap-4">
+            <div className="grid grid-cols-1 min-[360px]:grid-cols-2 gap-3 lg:gap-4">
               <WindCard
                 data={data?.result?.realtime?.wind}
                 loading={isLoading}
@@ -310,7 +310,7 @@ export default function Page() {
         <DrawerContent
           className={clsx(
             getWeatherBgColor(skycon, isNight),
-            "bg-opacity-40 backdrop-blur text-white border-t border-white/20", // Adjusted styling
+            "bg-opacity-40 backdrop-blur-sm text-white border-t border-white/20", // Adjusted styling
           )}>
           <DialogTitle />
           <div className="mx-auto w-full max-w-lg">
@@ -344,9 +344,9 @@ export default function Page() {
               className={clsx(
                 "flex items-center px-5 py-2.5 cursor-pointer transition-colors",
                 getWeatherBgColor(skycon, isNight, true), // Use hover variant color
-                "!bg-opacity-0 hover:!bg-opacity-20", // Adjusted hover effect
+                "bg-opacity-0! hover:bg-opacity-20!", // Adjusted hover effect
                 {
-                  "!bg-opacity-20": !isManualLocated, // Active state
+                  "bg-opacity-20!": !isManualLocated, // Active state
                   "opacity-50 cursor-not-allowed": locating, // Disabled state
                 },
               )}
@@ -355,10 +355,10 @@ export default function Page() {
                   handleGetLocation().then(() => closeDrawer());
                 }
               }}>
-              <div className="mr-3 flex-shrink-0 w-5 h-5 flex items-center justify-center">
+              <div className="mr-3 shrink-0 w-5 h-5 flex items-center justify-center">
                 {locating ? <Loader2 className="h-5 w-5 animate-spin" /> : <MapPin size={20} />}
               </div>
-              <div className="flex-grow overflow-hidden">
+              <div className="grow overflow-hidden">
                 <div className="text-sm font-medium">{locating ? "定位中..." : "我的位置"}</div>
                 <div className="text-xs opacity-80 truncate">{myAddress?.regeocode?.formatted_address ?? "未知"}</div>
               </div>
@@ -371,27 +371,27 @@ export default function Page() {
                 className={clsx(
                   "flex items-center px-5 py-2.5 cursor-pointer transition-colors",
                   getWeatherBgColor(skycon, isNight, true), // Use hover variant color
-                  "!bg-opacity-0 hover:!bg-opacity-20", // Adjusted hover effect
-                  { "!bg-opacity-20": item.lnglat === coord }, // Active state
+                  "bg-opacity-0! hover:bg-opacity-20!", // Adjusted hover effect
+                  { "bg-opacity-20!": item.lnglat === coord }, // Active state
                 )}
                 onClick={() => {
                   setCoord(item.lnglat);
                   closeDrawer();
                 }}>
-                <div className="mr-3 flex-shrink-0">
+                <div className="mr-3 shrink-0">
                   {/* Using SimpleBadge or replace with shadcn Badge/div */}
-                  <SimpleBadge className="!px-1 min-w-[1.25rem]">{index + 1}</SimpleBadge>
+                  <SimpleBadge className="px-1! min-w-[1.25rem]">{index + 1}</SimpleBadge>
                   {/* Example with shadcn Badge:
                   <Badge variant="secondary" className="px-1.5 py-0.5 text-xs">{index + 1}</Badge>
                   */}
                 </div>
-                <div className="flex-grow overflow-hidden">
+                <div className="grow overflow-hidden">
                   <div className="text-sm font-medium truncate">
                     {item.province ? `${item.city}${item.district} ${item.street}` : "坐标"}
                   </div>
                   <div className="text-xs opacity-80 truncate">{item.address || item.lnglat}</div>
                 </div>
-                <div className="ml-2 flex-shrink-0">
+                <div className="ml-2 shrink-0">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button
@@ -406,7 +406,7 @@ export default function Page() {
                       align="end"
                       className={clsx(
                         getWeatherBgColor(skycon, isNight),
-                        "bg-opacity-80 backdrop-blur border-white/20 text-white", // Adjusted styling
+                        "bg-opacity-80 backdrop-blur-sm border-white/20 text-white", // Adjusted styling
                       )}>
                       <DropdownMenuItem
                         disabled={index === 0}

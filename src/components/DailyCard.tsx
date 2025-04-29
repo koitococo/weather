@@ -71,14 +71,14 @@ export default function DailyCard({ data, ...props }: DailyCardProps) {
               key={date.getTime()}
               className="flex items-center justify-between gap-2">
               {/* Date */}
-              <div className="flex-shrink-0 w-[36px] sm:w-[80px] text-left">
+              <div className="shrink-0 w-[36px] sm:w-[80px] text-left">
                 <span className="hidden sm:inline">{formattedDate} </span>
                 <span>{isToday ? "今天" : weekday}</span>
               </div>
 
               {/* AQI Badge (visible on medium screens and up) */}
               {width > 320 && (
-                <div className="flex-shrink-0 w-[60px] text-center">
+                <div className="shrink-0 w-[60px] text-center">
                   <AQIBadge
                     aqi={row.AQI}
                     showVal={row.AQI != undefined}
@@ -88,7 +88,7 @@ export default function DailyCard({ data, ...props }: DailyCardProps) {
               )}
 
               {/* Weather Icon */}
-              <div className={`flex-shrink-0 text-center ${width > 500 ? "w-[64px] text-right" : "w-[24px]"}`}>
+              <div className={`shrink-0 text-center ${width > 500 ? "w-[64px] text-right" : "w-[24px]"}`}>
                 {row.skycon ? (
                   <WeatherIcon
                     className="w-5 h-5 inline-block"
@@ -101,18 +101,18 @@ export default function DailyCard({ data, ...props }: DailyCardProps) {
 
               {/* Skycon Text (visible on large screens and up) */}
               {width > 500 && (
-                <div className="flex-shrink-0 w-[64px] text-left opacity-80">
+                <div className="shrink-0 w-[64px] text-left opacity-80">
                   {row.skycon ? getSkyConText(row.skycon) : "--"}
                 </div>
               )}
 
               {/* Min Temperature */}
-              <div className="flex-shrink-0 w-[32px] text-right opacity-80">
+              <div className="shrink-0 w-[32px] text-right opacity-80">
                 {row.temperatureMin?.toFixed(0) ?? "--"}°
               </div>
 
               {/* Temperature Indicator */}
-              <div className="flex-grow min-w-[40px] sm:min-w-[60px]">
+              <div className="grow min-w-[40px] sm:min-w-[60px]">
                 <TemperatureIndicator
                   min={row.temperatureMin}
                   max={row.temperatureMax}
@@ -122,7 +122,7 @@ export default function DailyCard({ data, ...props }: DailyCardProps) {
               </div>
 
               {/* Max Temperature */}
-              <div className="flex-shrink-0 w-[32px] text-left">{row.temperatureMax?.toFixed(0) ?? "--"}°</div>
+              <div className="shrink-0 w-[32px] text-left">{row.temperatureMax?.toFixed(0) ?? "--"}°</div>
             </div>
           );
         })}

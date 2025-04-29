@@ -1,19 +1,227 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+@plugin 'tailwindcss-animate';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --transition-property-spacing: margin, padding;
+
+  --border-color-semi-transparent: rgba(255, 255, 255, 0.17);
+  --border-color-semi-transparent-dark: rgba(150, 150, 150, 0.25);
+
+  --background-color-blue-grey: #6274a2;
+  --background-color-semi-transparent: rgba(255, 255, 255, 0.11);
+  --background-color-semi-transparent-dark: rgba(0, 0, 0, 0.08);
+  --background-color-clear-day: #2b5097;
+  --background-color-clear-night: #002d57;
+  --background-color-partly-cloudy-day: #245084;
+  --background-color-partly-cloudy-night: #18354b;
+  --background-color-cloudy-day: #374371;
+  --background-color-cloudy-night: #283143;
+  --background-color-haze-day: #6d767c;
+  --background-color-haze-night: #4c4e51;
+  --background-color-fog-day: #7d94a5;
+  --background-color-fog-night: #616a72;
+  --background-color-snow-day: #53678f;
+  --background-color-snow-night: #334260;
+  --background-color-dust-day: #765d38;
+  --background-color-dust-night: #4d453b;
+  --background-color-sand-day: #5c3b1d;
+  --background-color-sand-night: #493a23;
+
+  --background-image-gradient-radial: radial-gradient(var(--tw-gradient-stops));
+  --background-image-gradient-conic: conic-gradient(
+    from 180deg at 50% 50%,
+    var(--tw-gradient-stops)
+  );
+  --background-image-gradient-linear: linear-gradient(
+    90deg,
+    #8861ff,
+    #9a91ff 33.33%,
+    #7f9df5,
+    #6aacee,
+    #55b4de,
+    #28c2d9,
+    #22d1d2,
+    #42e0c1,
+    #6cdc9f,
+    #97e880,
+    #c4e264,
+    #e7d325,
+    #ebbf39,
+    #f59800,
+    #ff8024,
+    #ff6b4d,
+    #f83258 66.67%,
+    #b9046e
+  );
+  --background-image-gradient-blue: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.7) 0%,
+    rgba(255, 255, 255, 0.7) 0.01%,
+    rgba(0, 0, 0, 0.7) 100%
+  );
+  --background-image-gradient-clear-day: linear-gradient(
+    180deg,
+    #e4d296 0%,
+    #2778b3 31.25%,
+    #2b5097 100%
+  );
+  --background-image-gradient-clear-night: linear-gradient(
+    180deg,
+    #002d57 0%,
+    #2d5e8b 100%
+  );
+  --background-image-gradient-partly-cloudy-day: linear-gradient(
+    180deg,
+    #7fafdc 0%,
+    #245084 100%
+  );
+  --background-image-gradient-partly-cloudy-night: linear-gradient(
+    180deg,
+    #18354b 0%,
+    #35688c 100%
+  );
+  --background-image-gradient-cloudy-day: linear-gradient(
+    180deg,
+    #6e82a1 0%,
+    #374371 100%
+  );
+  --background-image-gradient-cloudy-night: linear-gradient(
+    180deg,
+    #283143 0%,
+    #4c5565 100%
+  );
+  --background-image-gradient-haze-day: linear-gradient(
+    180deg,
+    #7a92a3 0%,
+    #635c57 100%
+  );
+  --background-image-gradient-haze-night: linear-gradient(
+    180deg,
+    #38424b 0%,
+    #605c58 100%
+  );
+  --background-image-gradient-fog-day: linear-gradient(
+    180deg,
+    #064e82 0%,
+    #7d94a5 44.27%,
+    #63798f 100%
+  );
+  --background-image-gradient-fog-night: linear-gradient(
+    180deg,
+    #002844 0%,
+    #616a72 44.27%,
+    #627384 100%
+  );
+  --background-image-gradient-snow-day: linear-gradient(
+    180deg,
+    #8095bd 0%,
+    #53678f 100%
+  );
+  --background-image-gradient-snow-night: linear-gradient(
+    180deg,
+    #334260 0%,
+    #5b6987 100%
+  );
+  --background-image-gradient-dust-day: linear-gradient(
+    180deg,
+    #b39e82 0%,
+    #765d38 100%
+  );
+  --background-image-gradient-dust-night: linear-gradient(
+    180deg,
+    #373c46 0%,
+    #634e2e 100%
+  );
+  --background-image-gradient-sand-day: linear-gradient(
+    180deg,
+    #bd9c5c 0%,
+    #5c3b1d 100%
+  );
+  --background-image-gradient-sand-night: linear-gradient(
+    180deg,
+    #332d25 0%,
+    #60461f 100%
+  );
+
+  --font-sans:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+
+  --color-chart-1: hsl(var(--chart-1));
+  --color-chart-2: hsl(var(--chart-2));
+  --color-chart-3: hsl(var(--chart-3));
+  --color-chart-4: hsl(var(--chart-4));
+  --color-chart-5: hsl(var(--chart-5));
 }
 
-.weather-icon {
-  width: 1em;
-  height: 1em;
-  vertical-align: -0.15em;
-  fill: currentColor;
-  overflow: hidden;
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
+
+@layer utilities {
+  :root {
+    --foreground-rgb: 0, 0, 0;
+    --background-start-rgb: 214, 219, 220;
+    --background-end-rgb: 255, 255, 255;
+  }
+
+  .weather-icon {
+    width: 1em;
+    height: 1em;
+    vertical-align: -0.15em;
+    fill: currentColor;
+    overflow: hidden;
+  }
 }
 
 @layer base {

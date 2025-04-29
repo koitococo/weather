@@ -36,7 +36,7 @@ export default function AirQualityCard({ data, ...props }: AirQualityCardProps) 
       {...props}
       icon={<Mist size={14} />}
       title="空气质量">
-      <div className="flex h-full justify-around items-center gap-4">
+      <div className="flex flex-row h-full justify-around items-center gap-4">
         <div className="flex items-center justify-center h-[120px] w-[120px]">
           <GaugeChart
             value={aqi ?? 0}

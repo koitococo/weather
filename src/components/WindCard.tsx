@@ -67,7 +67,7 @@ export default function WindCard({ data, ...props }: WindCardProps) {
       icon={<Wind size={14} />}
       title="风">
       <div className="flex h-full justify-center items-center">
-        <div className="max-w-[200px] flex flex-row flex-grow w-full h-full justify-between items-center">
+        <div className="max-w-[200px] flex flex-row grow w-full h-full justify-between items-center">
           <div>
             <div className="font-bold">{windText}</div>
             <div className="flex flex-wrap gap-x-4">

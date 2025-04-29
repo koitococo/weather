@@ -14,7 +14,7 @@ export default function SunCard({ data, ...props }: SunCardProps) {
       icon={<Sunset2 size={14} />}
       title="日出日落">
       <div className="h-full flex justify-center items-center">
-        <div className="max-w-[160px] flex flex-col flex-grow w-full h-full justify-between items-center">
+        <div className="flex flex-col grow w-full h-full justify-between items-center max-w-[200px] ">
         <DataItems
           data={[
             {

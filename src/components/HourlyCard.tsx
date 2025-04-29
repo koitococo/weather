@@ -40,7 +40,7 @@ export default function HourlyCard({
         {data ? (
           <>
             <div className="text-center">{data?.description}</div>
-            <ScrollArea className="mx-[-12px] mb-[-8px] [&_[data-orientation=horizontal]]:transition-[height] [&_[data-orientation=horizontal]]:duration-150 [&_[data-orientation=horizontal]:hover]:h-2 [&_[data-orientation=horizontal]:hover]:bg-white/10">
+            <ScrollArea className="mx-[-12px] mb-[-8px] **:data-[orientation=horizontal]:transition-[height] **:data-[orientation=horizontal]:duration-150 [&_[data-orientation=horizontal]:hover]:h-2 [&_[data-orientation=horizontal]:hover]:bg-white/10">
               <div className="h-[100px] w-[3400px]">
                 <AreaChart2
                   skycon={skycon}

@@ -20,7 +20,7 @@ export default function AlertCard({
 
   return (
     <DataCard
-      className={clsx(className, "!border-0")}
+      className={clsx(className, "border-0!")}
       {...props}
       onTitleClick={() => setIsHidden((prev) => !prev)}
       icon={<AlertTriangle size={16} />}

@@ -38,15 +38,15 @@ const DataCard = forwardRef(
         ref={ref}
         {...props}
         className={cn(
-          "relative flex flex-col overflow-hidden rounded bg-white/20 px-3 pb-2 text-card-foreground shadow-sm", // Adjusted base styles: bg, border, text color, padding
+          "relative flex flex-col overflow-hidden rounded bg-white/20 px-3 pb-2 text-card-foreground shadow-xs", // Adjusted base styles: bg, border, text color, padding
           noHeader ? "pt-2" : "", // Conditional top padding
-          loading ? "" : "backdrop-blur-sm", // Apply blur only when not loading
+          loading ? "" : "backdrop-blur-xs", // Apply blur only when not loading
           className,
         )}
       >
         {/* Loading Overlay */}
         {loading && (
-          <div className="absolute inset-0 z-10 flex items-center justify-center rounded-lg backdrop-blur-sm">
+          <div className="absolute inset-0 z-10 flex items-center justify-center rounded-lg backdrop-blur-xs">
             {/* Add a spinner component here if desired */}
             <span className="text-sm text-muted-foreground">Loading...</span>
           </div>
@@ -72,7 +72,7 @@ const DataCard = forwardRef(
         )}
 
         {/* Content */}
-        <div className="flex-grow">{children}</div>
+        <div className="h-full py-1">{children}</div>
       </div>
     );
   },
