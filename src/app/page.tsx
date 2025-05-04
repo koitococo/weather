@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Drawer, DrawerContent } from "@/components/ui/drawer";
+import { Drawer, DrawerContent, DrawerTitle } from "@/components/ui/drawer";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -28,13 +28,12 @@ import { getLocation } from "@/utils/location";
 import { GeolocationError, ReGeocodeResult } from "@/types/location";
 import AlertCard from "@/components/AlertCard"; // Keep custom components
 import { useLocalStorage } from "@mantine/hooks"; // Keep this hook for now, or replace with another solution like usehooks-ts
-import { ChevronDown, ChevronUp, MoreHorizontal, MapPin, Trash2, Loader2 } from "lucide-react"; // Use lucide-react icons
+import { ChevronDown, ChevronUp, MoreHorizontal, MapPin, Trash2, Loader2, Cross, X } from "lucide-react"; // Use lucide-react icons
 import GeoMap, { parsePosition } from "@/components/GeoMap"; // Keep custom components
 import { extractArrayOrString } from "@/utils/helper";
 import { SimpleBadge } from "@/components/SimpleBadge"; // Keep custom component or replace with shadcn Badge/div
 import { useAppContext } from "@/utils/ctx";
 import clsx from "clsx";
-import { DialogTitle } from "@radix-ui/react-dialog";
 
 export interface LocationType {
   lnglat: string;
@@ -60,8 +59,6 @@ export default function Page() {
 
   // 选择地点弹出层开启状态
   const [drawerOpened, setDrawerOpened] = useState(false);
-  const openDrawer = () => setDrawerOpened(true);
-  const closeDrawer = () => setDrawerOpened(false);
 
   // 我的地址
   const [myAddress, setMyAddress] = useState<ReGeocodeResult>();
@@ -234,7 +231,7 @@ export default function Page() {
           locating={locating}
           geoLoading={geoFetching}
           showLocationIcon={locating || !isManualLocated}
-          onGetLocation={openDrawer} // Trigger drawer open
+          onGetLocation={() => setDrawerOpened(true)} // Trigger drawer open
           weatherValidating={isValidating}
         />
         {data?.result?.alert?.content.length ? (
@@ -305,17 +302,27 @@ export default function Page() {
       <Toaster />
 
       <Drawer
+        dismissible={false}
         open={drawerOpened}
         onOpenChange={setDrawerOpened}>
         <DrawerContent
           className={clsx(
             getWeatherBgColor(skycon, isNight),
-            "bg-opacity-40 backdrop-blur-sm text-white border-t border-white/20", // Adjusted styling
+            "bg-opacity-40 backdrop-blur-sm text-white border-t border-white/20",
           )}>
-          <DialogTitle />
+          <DrawerTitle />
           <div className="mx-auto w-full max-w-lg">
+            <div className="flex flex-row grow justify-end py-1">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-6 w-6 text-white hover:bg-white/10"
+                onClick={() => setDrawerOpened(false)}>
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
             <GeoMap
-              className="pb-2 mt-2" // Keep existing class
+              className="pb-2" // Keep existing class
               AMapKey={amap_js_key}
               coordinate={parsePosition(coord)}
               pinList={locationList}
@@ -335,11 +342,10 @@ export default function Page() {
                   address: address ?? "",
                   street: street ?? "",
                 });
-                closeDrawer();
+                setDrawerOpened(false);
               }}
             />
-            <hr className="border-t border-white/20" /> {/* Replaced Divider */}
-            {/* My Location Item */}
+            <hr className="border-t border-white/20" />
             <div
               className={clsx(
                 "flex items-center px-5 py-2.5 cursor-pointer transition-colors",
@@ -363,8 +369,7 @@ export default function Page() {
                 <div className="text-xs opacity-80 truncate">{myAddress?.regeocode?.formatted_address ?? "未知"}</div>
               </div>
             </div>
-            <hr className="border-t border-white/20" /> {/* Replaced Divider */}
-            {/* Location List Items */}
+            <hr className="border-t border-white/20" />
             {locationList.map((item, index) => (
               <div
                 key={item.lnglat}
@@ -376,7 +381,7 @@ export default function Page() {
                 )}
                 onClick={() => {
                   setCoord(item.lnglat);
-                  closeDrawer();
+                  setDrawerOpened(false);
                 }}>
                 <div className="mr-3 shrink-0">
                   {/* Using SimpleBadge or replace with shadcn Badge/div */}
@@ -443,8 +448,6 @@ export default function Page() {
                 </div>
               </div>
             ))}
-            {/* Optional: Add DrawerFooter if needed */}
-            {/* <DrawerFooter> <Button>Submit</Button> <DrawerClose asChild> <Button variant="outline">Cancel</Button> </DrawerClose> </DrawerFooter> */}
           </div>
         </DrawerContent>
       </Drawer>
