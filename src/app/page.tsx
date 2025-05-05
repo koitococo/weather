@@ -28,7 +28,7 @@ import { getLocation } from "@/utils/location";
 import { GeolocationError, ReGeocodeResult } from "@/types/location";
 import AlertCard from "@/components/AlertCard"; // Keep custom components
 import { useLocalStorage } from "@mantine/hooks"; // Keep this hook for now, or replace with another solution like usehooks-ts
-import { ChevronDown, ChevronUp, MoreHorizontal, MapPin, Trash2, Loader2, Cross, X } from "lucide-react"; // Use lucide-react icons
+import { ChevronDown, ChevronUp, MoreHorizontal, MapPin, Trash2, Loader2, X } from "lucide-react"; // Use lucide-react icons
 import GeoMap, { parsePosition } from "@/components/GeoMap"; // Keep custom components
 import { extractArrayOrString } from "@/utils/helper";
 import { SimpleBadge } from "@/components/SimpleBadge"; // Keep custom component or replace with shadcn Badge/div
@@ -241,7 +241,7 @@ export default function Page() {
             loading={isLoading}
           />
         ) : null}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6 mt-4 lg:mt-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 lg:mt-6">
           <AirQualityCard
             data={data?.result?.realtime?.air_quality}
             loading={isLoading}
@@ -257,8 +257,8 @@ export default function Page() {
             data={data?.result?.daily}
             loading={isLoading}
           />
-          <div className="grid grid-cols-1 gap-3 lg:gap-4">
-            <div className="grid grid-cols-1 min-[360px]:grid-cols-2 gap-3 lg:gap-4">
+          <div className="grid grid-cols-1 gap-4">
+            <div className="grid grid-cols-1 min-[360px]:grid-cols-2 gap-4">
               <WindCard
                 data={data?.result?.realtime?.wind}
                 loading={isLoading}
@@ -358,7 +358,7 @@ export default function Page() {
               )}
               onClick={() => {
                 if (!locating) {
-                  handleGetLocation().then(() => closeDrawer());
+                  handleGetLocation().then(() => setDrawerOpened(false));
                 }
               }}>
               <div className="mr-3 shrink-0 w-5 h-5 flex items-center justify-center">

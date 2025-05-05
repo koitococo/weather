@@ -1,10 +1,4 @@
-import {
-  ForwardedRef,
-  forwardRef,
-  HTMLAttributes,
-  MouseEventHandler,
-  ReactNode,
-} from "react";
+import { ForwardedRef, forwardRef, HTMLAttributes, MouseEventHandler, ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 export interface DataCardProps extends HTMLAttributes<HTMLDivElement> {
@@ -19,18 +13,7 @@ export interface DataCardProps extends HTMLAttributes<HTMLDivElement> {
 
 const DataCard = forwardRef(
   (
-    {
-      icon,
-      title,
-      children,
-      className,
-      extra,
-      titleBg,
-      onTitleClick,
-      loading,
-      noHeader,
-      ...props
-    }: DataCardProps,
+    { icon, title, children, className, extra, titleBg, onTitleClick, loading, noHeader, ...props }: DataCardProps,
     ref: ForwardedRef<HTMLDivElement>,
   ) => {
     return (
@@ -38,12 +21,11 @@ const DataCard = forwardRef(
         ref={ref}
         {...props}
         className={cn(
-          "relative flex flex-col overflow-hidden rounded bg-white/20 px-3 pb-2 text-card-foreground shadow-xs", // Adjusted base styles: bg, border, text color, padding
+          "relative flex flex-col overflow-hidden rounded-lg bg-white/10 px-3 pb-2 text-card-foreground shadow-xs", // Adjusted base styles: bg, border, text color, padding
           noHeader ? "pt-2" : "", // Conditional top padding
           loading ? "" : "backdrop-blur-xs", // Apply blur only when not loading
           className,
-        )}
-      >
+        )}>
         {/* Loading Overlay */}
         {loading && (
           <div className="absolute inset-0 z-10 flex items-center justify-center rounded-lg backdrop-blur-xs">
@@ -59,10 +41,11 @@ const DataCard = forwardRef(
               "flex items-center justify-between gap-2 py-2 px-3 -mx-3",
               "transition-colors duration-200",
               onTitleClick ? "cursor-pointer" : "",
-              titleBg ? `bg-[${titleBg}]` : "bg-opacity-80",
             )}
-            onClick={onTitleClick}
-          >
+            style={{
+              backgroundColor: titleBg,
+            }}
+            onClick={onTitleClick}>
             <div className="flex items-center gap-2">
               {icon && <span>{icon}</span>}
               {title && <span className="text-sm font-medium">{title}</span>}
@@ -70,9 +53,7 @@ const DataCard = forwardRef(
             {extra && <div>{extra}</div>}
           </div>
         )}
-
-        {/* Content */}
-        <div className="h-full py-1">{children}</div>
+        {children}
       </div>
     );
   },

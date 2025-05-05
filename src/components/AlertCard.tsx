@@ -33,7 +33,7 @@ export default function AlertCard({
           {/* Badge with opacity transition */}
           <div
             className={clsx(
-              "transition-opacity duration-200",
+              "flex items-center transition-opacity duration-200",
               isHidden ? "opacity-100" : "opacity-0 invisible", // Use invisible to prevent interaction when hidden
             )}
           >
@@ -57,7 +57,7 @@ export default function AlertCard({
       {/* Accordion content area */}
       <div
         style={{ height: isHidden ? 0 : height }}
-        className="overflow-hidden transition-[height] duration-200"
+        className="overflow-hidden transition-[height] duration-200 -mx-3 last:-mb-2"
         // Removed mx={-12} -> adjust padding within DataCard or here if needed
       >
         <div ref={ref}>

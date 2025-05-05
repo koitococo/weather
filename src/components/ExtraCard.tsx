@@ -27,7 +27,7 @@ export default function ExtraCard({
   return (
     <DataCard {...props} icon={<Flare size={14} />} title="其他数据">
       <div
-        className="grid h-full grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-3"
+        className="grid h-full grid-cols-2 gap-4 sm:grid-cols-4"
       >
         <StatDataDisplay
           icon={<Temperature size={16} />}
